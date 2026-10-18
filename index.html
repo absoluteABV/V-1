@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABSOLUTE ABV | Premium Spirits & Express Delivery</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#090a0f',
+                        cardDark: '#121520',
+                        iceCyan: '#00f2fe',
+                        neonBlue: '#4facfe',
+                        neonGreen: '#10b981',
+                        tropicalGold: '#ffb703',
+                        tropicalOrange: '#fb8500',
+                        glassBorder: 'rgba(255, 255, 255, 0.08)',
+                    },
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    boxShadow: {
+                        'ice-glow': '0 0 25px -5px rgba(0, 242, 254, 0.3)',
+                        'green-glow': '0 0 25px -5px rgba(16, 185, 129, 0.3)',
+                        'gold-glow': '0 0 25px -5px rgba(255, 183, 3, 0.3)',
+                        'ice-glow-lg': '0 0 50px -10px rgba(0, 242, 254, 0.4)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #090a0f;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism styles */
+        .glass-card {
+            background: rgba(18, 21, 32, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 242, 254, 0.3);
+            box-shadow: 0 0 30px -5px rgba(0, 242, 254, 0.25);
+        }
+
+        .glass-nav {
+            background: rgba(9, 10, 15, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(1deg); }
+        }
+
+        .animate-float {
+            animation: floatSlow 6s ease-in-out infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090a0f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #10b981;
+        }
+    </style>
+</head>
+<body class="selection:bg-neonGreen selection:text-obsidian relative min-h-screen flex flex-col justify-between">
+
+    <!-- Matrix Style Digital Falling Vodka Bottle Canvas Background -->
+    <canvas id="matrixCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-20"></canvas>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 glass-card text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none border-neonGreen/40">
+        <i class="fa-solid fa-circle-check text-neonGreen text-lg"></i>
+        <span id="toast-message" class="font-medium text-xs font-mono text-slate-200">System event</span>
+    </div>
+
+    <!-- Age Verification Modal (18+) -->
+    <div id="age-modal" class="fixed inset-0 z-50 bg-obsidian/95 backdrop-blur-2xl flex items-center justify-center p-4 transition-opacity duration-500">
+        <div class="glass-card p-8 sm:p-10 rounded-3xl max-w-md w-full text-center border-neonGreen/30 relative overflow-hidden shadow-green-glow">
+            <div class="absolute -top-24 -left-24 w-48 h-48 bg-neonGreen/20 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-neonGreen to-iceCyan flex items-center justify-center text-obsidian mx-auto mb-6 shadow-green-glow">
+                <i class="fa-solid fa-wine-bottle text-2xl font-black"></i>
+            </div>
+
+            <h2 class="text-xs font-mono uppercase tracking-[0.3em] text-neonGreen font-bold mb-2">Legal Verification</h2>
+            <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-white mb-3">AGE VERIFICATION</h1>
+            <p class="text-xs text-slate-400 mb-8 leading-relaxed">
+                You must be of legal drinking age (18+) in your region to access ABSOLUTE ABV.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="confirmAge(true)" class="w-full bg-gradient-to-r from-neonGreen to-iceCyan hover:opacity-90 text-obsidian font-black py-3.5 px-6 rounded-2xl transition-all duration-200 text-xs tracking-wider uppercase shadow-green-glow">
+                    I am 18 or older
+                </button>
+                <button onclick="confirmAge(false)" class="w-full bg-slate-900/80 hover:bg-slate-800 text-slate-400 font-bold py-3.5 px-6 rounded-2xl border border-slate-800 transition-all duration-200 text-xs tracking-wider uppercase">
+                    Under 18
+                </button>
+            </div>
+            
+            <p id="age-error" class="hidden text-rose-400 text-xs font-mono mt-4">Access restricted. You must be 18+ to enter.</p>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <!-- Brand -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neonGreen via-iceCyan to-tropicalGold flex items-center justify-center text-obsidian shadow-green-glow group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-wine-bottle text-lg font-black"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-lg sm:text-xl tracking-wider text-white">ABSOLUTE <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonGreen to-iceCyan">ABV</span></span>
+                    <span class="block text-[9px] font-mono tracking-[0.25em] text-slate-400 -mt-1 uppercase">Handcrafted Vodka</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-6 font-mono text-xs uppercase tracking-wider text-slate-300">
+                <a href="#spirits" class="hover:text-neonGreen transition-colors">Products</a>
+                <a href="#calculator" class="hover:text-iceCyan transition-colors">Cocktail Calculator</a>
+                <a href="#contact" class="hover:text-tropicalGold transition-colors">Contact Us</a>
+            </nav>
+
+            <!-- Cart Trigger -->
+            <div class="flex items-center gap-3">
+                <button onclick="toggleCartDrawer()" class="relative bg-slate-900/90 hover:bg-slate-800 text-white p-3 rounded-2xl border border-glassBorder transition-all flex items-center justify-center">
+                    <i class="fa-solid fa-bag-shopping text-base text-neonGreen"></i>
+                    <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-neonGreen to-iceCyan text-obsidian text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow-green-glow scale-0 transition-transform">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN SHOP CONTENT -->
+    <main class="relative z-10 flex-grow">
+        
+        <!-- Hero Section -->
+        <section class="relative py-12 sm:py-20 border-b border-glassBorder">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-neonGreen/30 text-neonGreen text-[11px] font-mono tracking-widest uppercase">
+                    <span class="w-2 h-2 rounded-full bg-neonGreen animate-ping"></span>
+                    Micro-Batch Craft Vodka
+                </div>
+
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight uppercase leading-tight">
+                    PURE PROOF SPIRITS.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonGreen via-iceCyan to-tropicalGold">ABSOLUTE ABV.</span>
+                </h1>
+
+                <p class="text-slate-400 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed font-mono">
+                    Handcrafted 500 ML vodkas made with premium ingredients.
+                </p>
+
+                <div class="pt-4 flex justify-center gap-4">
+                    <a href="#spirits" class="bg-gradient-to-r from-neonGreen to-iceCyan text-obsidian font-black px-6 py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-green-glow hover:opacity-90 transition-opacity">
+                        Explore Collection <i class="fa-solid fa-arrow-down ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spirits Showcase Grid -->
+        <section id="spirits" class="py-12 sm:py-20 border-b border-glassBorder">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-mono text-neonGreen uppercase tracking-[0.3em]">Micro-Batch Collection</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white mt-1 uppercase">OUR FLAGSHIP EDITIONS</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
+                    
+                    <!-- Product 1: OBSIDIAN ABV -->
+                    <div class="glass-card p-6 sm:p-8 rounded-3xl border-iceCyan/20 flex flex-col justify-between relative overflow-hidden group">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-rose-500/20 text-rose-400 border border-rose-500/40 text-[11px] font-mono font-bold px-3 py-1 rounded-full uppercase">
+                                Save More
+                            </span>
+                            <span class="bg-slate-900/90 text-iceCyan border border-iceCyan/40 text-[11px] font-mono font-bold px-3 py-1 rounded-full uppercase">
+                                40.0% ABV
+                            </span>
+                        </div>
+
+                        <div class="py-6 flex justify-center animate-float">
+                            <svg class="w-40 h-64 drop-shadow-[0_0_25px_rgba(0,242,254,0.35)]" viewBox="0 0 200 380" fill="none">
+                                <rect x="85" y="10" width="30" height="25" rx="3" fill="#00f2fe" />
+                                <rect x="83" y="35" width="34" height="8" rx="2" fill="#121520" stroke="#00f2fe" stroke-width="2" />
+                                <path d="M82 43 H118 V110 C118 120 135 135 145 150 V340 C145 355 135 365 120 365 H80 C65 365 55 355 55 340 V150 C65 135 82 120 82 110 Z" fill="url(#bottleGlassObsidian)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                                <path d="M57 160 C65 150 82 130 82 120 H118 C118 130 135 150 143 160 V335 C143 350 135 360 120 360 H80 C65 360 57 350 57 335 Z" fill="url(#liquidObsidian)"/>
+                                <rect x="68" y="185" width="64" height="115" rx="4" fill="#090a0f" stroke="#00f2fe" stroke-width="1.5"/>
+                                <text x="100" y="208" fill="#00f2fe" font-family="Space Grotesk" font-size="8" font-weight="900" text-anchor="middle" letter-spacing="2">ABSOLUTE</text>
+                                <text x="100" y="228" fill="#ffffff" font-family="Space Grotesk" font-size="13" font-weight="900" text-anchor="middle" letter-spacing="2">ABV</text>
+                                <line x1="78" y1="238" x2="122" y2="238" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                                <text x="100" y="254" fill="#00f2fe" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle">40% ABV</text>
+                                <text x="100" y="268" fill="#94a3b8" font-family="JetBrains Mono" font-size="7" font-weight="700" text-anchor="middle">OBSIDIAN</text>
+                                <text x="100" y="288" fill="#ffb703" font-family="JetBrains Mono" font-size="12" font-weight="900" text-anchor="middle" letter-spacing="1">500 ML</text>
+                                <defs>
+                                    <linearGradient id="bottleGlassObsidian" x1="100" y1="10" x2="100" y2="365" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#121520" stop-opacity="0.8"/>
+                                        <stop offset="1" stop-color="#090a0f" stop-opacity="0.95"/>
+                                    </linearGradient>
+                                    <linearGradient id="liquidObsidian" x1="100" y1="120" x2="100" y2="360" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#00f2fe" stop-opacity="0.25"/>
+                                        <stop offset="1" stop-color="#4facfe" stop-opacity="0.1"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+
+                        <div class="space-y-4 text-center border-t border-glassBorder/60 pt-5">
+                            <div class="flex items-center justify-center gap-3">
+                                <h3 class="font-extrabold text-2xl text-white">OBSIDIAN ABV</h3>
+                                <span class="bg-gradient-to-r from-tropicalGold to-tropicalOrange text-obsidian text-xs font-black px-2.5 py-1 rounded-lg shadow-gold-glow">500 ML</span>
+                            </div>
+
+                            <p class="text-xs text-slate-300 font-mono leading-relaxed h-10 flex items-center justify-center italic">
+                                "Satan's heat, and heavens glassy mix of glimmering glacier water."
+                            </p>
+
+                            <div class="flex items-center justify-between pt-3 border-t border-glassBorder/40">
+                                <div class="text-left">
+                                    <div class="relative inline-block text-slate-400 font-mono text-xs font-bold">
+                                        <span>$60.00</span>
+                                        <div class="absolute inset-x-0 top-1/2 h-0.5 bg-rose-500 transform -rotate-12"></div>
+                                    </div>
+                                    <div class="text-2xl font-mono font-black text-iceCyan tracking-tight">$50.00</div>
+                                </div>
+                                <button onclick="addToCart(1)" class="bg-gradient-to-r from-iceCyan to-neonBlue text-obsidian font-extrabold px-5 py-3 rounded-xl text-xs uppercase tracking-wider hover:opacity-90 transition-all shadow-ice-glow">
+                                    Add To Order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 2: TROPICAL HEAT -->
+                    <div class="glass-card p-6 sm:p-8 rounded-3xl border-tropicalGold/20 flex flex-col justify-between relative overflow-hidden group">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-rose-500/20 text-rose-400 border border-rose-500/40 text-[11px] font-mono font-bold px-3 py-1 rounded-full uppercase">
+                                Save More
+                            </span>
+                            <span class="bg-slate-900/90 text-tropicalGold border border-tropicalGold/40 text-[11px] font-mono font-bold px-3 py-1 rounded-full uppercase">
+                                30.0% ABV
+                            </span>
+                        </div>
+
+                        <div class="py-6 flex justify-center animate-float" style="animation-delay: -3s;">
+                            <svg class="w-40 h-64 drop-shadow-[0_0_25px_rgba(255,183,3,0.35)]" viewBox="0 0 200 380" fill="none">
+                                <rect x="85" y="10" width="30" height="25" rx="3" fill="#ffb703" />
+                                <rect x="83" y="35" width="34" height="8" rx="2" fill="#121520" stroke="#ffb703" stroke-width="2" />
+                                <path d="M82 43 H118 V110 C118 120 135 135 145 150 V340 C145 355 135 365 120 365 H80 C65 365 55 355 55 340 V150 C65 135 82 120 82 110 Z" fill="url(#bottleGlassTropical)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                                <path d="M57 160 C65 150 82 130 82 120 H118 C118 130 135 150 143 160 V335 C143 350 135 360 120 360 H80 C65 360 57 350 57 335 Z" fill="url(#liquidTropical)"/>
+                                <rect x="68" y="185" width="64" height="115" rx="4" fill="#090a0f" stroke="#ffb703" stroke-width="1.5"/>
+                                <text x="100" y="208" fill="#ffb703" font-family="Space Grotesk" font-size="8" font-weight="900" text-anchor="middle" letter-spacing="2">ABSOLUTE</text>
+                                <text x="100" y="228" fill="#ffffff" font-family="Space Grotesk" font-size="13" font-weight="900" text-anchor="middle" letter-spacing="2">ABV</text>
+                                <line x1="78" y1="238" x2="122" y2="238" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                                <text x="100" y="254" fill="#ffb703" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="middle">30% ABV</text>
+                                <text x="100" y="268" fill="#fb8500" font-family="JetBrains Mono" font-size="7" font-weight="700" text-anchor="middle">TROPICAL HEAT</text>
+                                <text x="100" y="288" fill="#ffb703" font-family="JetBrains Mono" font-size="12" font-weight="900" text-anchor="middle" letter-spacing="1">500 ML</text>
+                                <defs>
+                                    <linearGradient id="bottleGlassTropical" x1="100" y1="10" x2="100" y2="365" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#121520" stop-opacity="0.8"/>
+                                        <stop offset="1" stop-color="#090a0f" stop-opacity="0.95"/>
+                                    </linearGradient>
+                                    <linearGradient id="liquidTropical" x1="100" y1="120" x2="100" y2="360" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#ffb703" stop-opacity="0.35"/>
+                                        <stop offset="1" stop-color="#fb8500" stop-opacity="0.15"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+
+                        <div class="space-y-4 text-center border-t border-glassBorder/60 pt-5">
+                            <div class="flex items-center justify-center gap-3">
+                                <h3 class="font-extrabold text-2xl text-white">TROPICAL HEAT</h3>
+                                <span class="bg-gradient-to-r from-tropicalGold to-tropicalOrange text-obsidian text-xs font-black px-2.5 py-1 rounded-lg shadow-gold-glow">500 ML</span>
+                            </div>
+
+                            <p class="text-xs text-slate-300 font-mono leading-relaxed h-10 flex items-center justify-center italic">
+                                "A tropical twist for your favorite times."
+                            </p>
+
+                            <div class="flex items-center justify-between pt-3 border-t border-glassBorder/40">
+                                <div class="text-left">
+                                    <div class="relative inline-block text-slate-400 font-mono text-xs font-bold">
+                                        <span>$60.00</span>
+                                        <div class="absolute inset-x-0 top-1/2 h-0.5 bg-rose-500 transform -rotate-12"></div>
+                                    </div>
+                                    <div class="text-2xl font-mono font-black text-tropicalGold tracking-tight">$45.00</div>
+                                </div>
+                                <button onclick="addToCart(2)" class="bg-gradient-to-r from-tropicalGold to-tropicalOrange text-obsidian font-extrabold px-5 py-3 rounded-xl text-xs uppercase tracking-wider hover:opacity-90 transition-all shadow-gold-glow">
+                                    Add To Order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- COCKTAIL & ABV MIX CALCULATOR SECTION -->
+        <section id="calculator" class="py-12 sm:py-20 border-b border-glassBorder">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <span class="text-xs font-mono text-iceCyan uppercase tracking-[0.3em]">Mixology Calculator</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white mt-1 uppercase">COCKTAIL & ABV CALCULATOR</h2>
+                    <p class="text-slate-400 text-xs font-mono mt-2">Calculate the final alcohol percentage (ABV) and standard drinks of your custom mix.</p>
+                </div>
+
+                <div class="glass-card p-6 sm:p-8 rounded-3xl border-iceCyan/30 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Spirit Choice -->
+                        <div class="space-y-4">
+                            <label class="block text-xs font-mono uppercase text-neonGreen font-bold">1. Select Spirit Base</label>
+                            <select id="calc-spirit" onchange="calculateMix()" class="w-full bg-slate-900 border border-glassBorder text-white text-xs font-mono rounded-xl p-3 focus:border-iceCyan focus:outline-none">
+                                <option value="40">OBSIDIAN ABV (40.0% ABV)</option>
+                                <option value="30">TROPICAL HEAT (30.0% ABV)</option>
+                            </select>
+
+                            <div>
+                                <div class="flex justify-between text-xs font-mono text-slate-300 mb-1">
+                                    <span>Spirit Pour Volume:</span>
+                                    <span id="spirit-vol-val" class="text-iceCyan font-bold">45 ml</span>
+                                </div>
+                                <input type="range" id="spirit-vol" min="15" max="150" step="5" value="45" oninput="calculateMix()" class="w-full accent-iceCyan bg-slate-900 h-2 rounded-lg cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Mixer Choice -->
+                        <div class="space-y-4">
+                            <label class="block text-xs font-mono uppercase text-tropicalGold font-bold">2. Select Mixer / Dilution</label>
+                            <select id="calc-mixer" onchange="calculateMix()" class="w-full bg-slate-900 border border-glassBorder text-white text-xs font-mono rounded-xl p-3 focus:border-tropicalGold focus:outline-none">
+                                <option value="0">Tonic / Soda / Juice (0.0% ABV)</option>
+                                <option value="5">Hard Seltzer Mixer (5.0% ABV)</option>
+                                <option value="0.0001">Neat / Rocks (0 ml Mixer)</option>
+                            </select>
+
+                            <div>
+                                <div class="flex justify-between text-xs font-mono text-slate-300 mb-1">
+                                    <span>Mixer Volume:</span>
+                                    <span id="mixer-vol-val" class="text-tropicalGold font-bold">150 ml</span>
+                                </div>
+                                <input type="range" id="mixer-vol" min="0" max="350" step="10" value="150" oninput="calculateMix()" class="w-full accent-tropicalGold bg-slate-900 h-2 rounded-lg cursor-pointer">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Output Results Card -->
+                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-glassBorder grid grid-cols-2 sm:grid-cols-3 gap-4 text-center font-mono">
+                        <div>
+                            <span class="block text-[10px] text-slate-500 uppercase">Total Drink Vol</span>
+                            <span id="res-total-vol" class="text-lg font-extrabold text-white">195 ml</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-slate-500 uppercase">Final Blend ABV</span>
+                            <span id="res-final-abv" class="text-lg font-extrabold text-neonGreen">9.23%</span>
+                        </div>
+                        <div class="col-span-2 sm:col-span-1">
+                            <span class="block text-[10px] text-slate-500 uppercase">Standard Drinks</span>
+                            <span id="res-std-drinks" class="text-lg font-extrabold text-tropicalGold">1.42</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT US SECTION WITH DIRECT SIGNAL LINK ONLY -->
+        <section id="contact" class="py-12 sm:py-20">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <span class="text-xs font-mono text-tropicalGold uppercase tracking-[0.3em]">Direct Messaging</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white mt-1 uppercase">CONTACT US</h2>
+                    <p class="text-slate-400 text-xs font-mono mt-2">Reach out directly via Signal for custom orders and private inquiries.</p>
+                </div>
+
+                <div class="glass-card p-8 sm:p-12 rounded-3xl border-blue-500/30 text-center space-y-6 max-w-xl mx-auto">
+                    <div class="w-16 h-16 rounded-2xl bg-blue-600/20 text-blue-400 border border-blue-500/40 flex items-center justify-center text-2xl mx-auto shadow-lg">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h3 class="text-2xl font-black text-white">Connect on Signal</h3>
+                        <p class="text-xs text-slate-400 font-mono leading-relaxed">
+                            Click below to open a direct, encrypted chat room with Mrvodka.64 on Signal.
+                        </p>
+                    </div>
+
+                    <a href="https://signal.me/#eu/FU_3g7DdgSyOsqyp_PqI76s3CgBRUHrNbjpGLQYxRVkD6BZTiutKe5sRHfNedR5P" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:opacity-95 text-white font-mono font-black px-8 py-4 rounded-2xl text-xs uppercase tracking-wider w-full shadow-lg hover:shadow-blue-500/25 transition-all">
+                        <i class="fa-solid fa-comment-dots text-base"></i>
+                        Add Me On Signal (@Mrvodka.64)
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Shopping Cart Drawer -->
+    <div id="cart-drawer-backdrop" onclick="toggleCartDrawer()" class="fixed inset-0 bg-obsidian/80 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-md h-full bg-slate-950 z-50 shadow-2xl border-l border-glassBorder transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-6 border-b border-glassBorder flex items-center justify-between bg-slate-900/50">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-bag-shopping text-neonGreen"></i>
+                <h3 class="font-extrabold text-white text-base tracking-wider uppercase">Your Order</h3>
+            </div>
+            <button onclick="toggleCartDrawer()" class="w-8 h-8 rounded-full bg-slate-900 hover:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4"></div>
+
+        <!-- Checkout Form Fields -->
+        <div class="p-6 border-t border-glassBorder bg-slate-900/50 space-y-3 font-mono text-xs">
+            <div class="space-y-2">
+                <input type="text" id="checkout-name" placeholder="Full Legal Name (18+)" class="w-full bg-slate-950 border border-glassBorder text-white p-2.5 rounded-xl focus:outline-none focus:border-neonGreen">
+                <input type="text" id="checkout-address" placeholder="Delivery Address" class="w-full bg-slate-950 border border-glassBorder text-white p-2.5 rounded-xl focus:outline-none focus:border-neonGreen">
+            </div>
+
+            <div class="flex justify-between text-slate-400 pt-2 border-t border-glassBorder">
+                <span>Subtotal</span>
+                <span id="cart-subtotal" class="font-bold text-white">$0.00</span>
+            </div>
+            <div class="flex justify-between text-sm font-extrabold text-white pt-2 border-t border-glassBorder">
+                <span>Total</span>
+                <span id="cart-total" class="text-neonGreen font-mono">$0.00</span>
+            </div>
+
+            <button onclick="handleCheckout()" class="w-full mt-2 bg-gradient-to-r from-neonGreen to-iceCyan hover:opacity-90 text-obsidian font-black py-4 rounded-2xl shadow-green-glow transition-all uppercase tracking-widest text-xs">
+                Confirm & Place Order
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-glassBorder bg-slate-950 py-8 relative z-10 text-center font-mono text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p>© 2026 ABSOLUTE ABV. All rights reserved. Enjoy responsibly (18+).</p>
+            <p class="text-[10px]">Signal Contact: Mrvodka.64</p>
+        </div>
+    </footer>
+
+    <!-- Application Scripting -->
+    <script>
+        // Core Product Models
+        const products = [
+            {
+                id: 1,
+                name: 'OBSIDIAN ABV (500 ML)',
+                abv: '40.0%',
+                price: 50.00,
+                color: '#00f2fe'
+            },
+            {
+                id: 2,
+                name: 'TROPICAL HEAT (500 ML)',
+                abv: '30.0%',
+                price: 45.00,
+                color: '#ffb703'
+            }
+        ];
+
+        // Cart State
+        let cart = [];
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', () => {
+            initMatrixRain();
+            calculateMix();
+        });
+
+        // Cocktail & ABV Calculator Implementation
+        function calculateMix() {
+            const spiritAbv = parseFloat(document.getElementById('calc-spirit').value);
+            const spiritVol = parseFloat(document.getElementById('spirit-vol').value);
+            const mixerAbv = parseFloat(document.getElementById('calc-mixer').value);
+            const mixerVol = parseFloat(document.getElementById('mixer-vol').value);
+
+            document.getElementById('spirit-vol-val').innerText = `${spiritVol} ml`;
+            document.getElementById('mixer-vol-val').innerText = `${mixerVol} ml`;
+
+            const totalVol = spiritVol + mixerVol;
+            const pureAlcohol = (spiritVol * (spiritAbv / 100)) + (mixerVol * (mixerAbv / 100));
+            const finalAbv = totalVol > 0 ? (pureAlcohol / totalVol) * 100 : 0;
+            const stdDrinks = pureAlcohol / 12.5;
+
+            document.getElementById('res-total-vol').innerText = `${Math.round(totalVol)} ml`;
+            document.getElementById('res-final-abv').innerText = `${finalAbv.toFixed(1)}%`;
+            document.getElementById('res-std-drinks').innerText = stdDrinks.toFixed(2);
+        }
+
+        // Shopping Cart Implementation
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existing = cart.find(item => item.id === productId);
+
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartUI();
+            showToast(`Added ${product.name} to cart.`);
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items');
+            const badge = document.getElementById('cart-badge');
+            const subtotal = document.getElementById('cart-subtotal');
+            const total = document.getElementById('cart-total');
+
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            badge.innerText = totalCount;
+            if (totalCount > 0) badge.classList.remove('scale-0');
+            else badge.classList.add('scale-0');
+
+            subtotal.innerText = `$${totalPrice.toFixed(2)}`;
+            total.innerText = `$${totalPrice.toFixed(2)}`;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 text-slate-500 font-mono">
+                        <i class="fa-solid fa-bag-shopping text-3xl mb-3 text-slate-700"></i>
+                        <p class="text-xs">Your cart is empty.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = cart.map((item, index) => `
+                <div class="p-4 bg-slate-900/80 rounded-2xl border border-glassBorder flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-xs text-white">${item.name}</h4>
+                        <span class="text-xs font-mono font-bold" style="color: ${item.color};">$${item.price.toFixed(2)}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center bg-slate-950 border border-glassBorder rounded-xl font-mono text-xs">
+                            <button onclick="changeQty(${index}, -1)" class="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-white">-</button>
+                            <span class="w-5 text-center text-white">${item.quantity}</span>
+                            <button onclick="changeQty(${index}, 1)" class="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-white">+</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeQty(index, delta) {
+            cart[index].quantity += delta;
+            if (cart[index].quantity <= 0) cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cart-drawer');
+            const backdrop = document.getElementById('cart-drawer-backdrop');
+            drawer.classList.toggle('translate-x-full');
+            backdrop.classList.toggle('opacity-0');
+            backdrop.classList.toggle('pointer-events-none');
+        }
+
+        function handleCheckout() {
+            if (cart.length === 0) {
+                showToast('Cart is empty.');
+                return;
+            }
+
+            const name = document.getElementById('checkout-name').value.trim();
+            const address = document.getElementById('checkout-address').value.trim();
+
+            if (!name || !address) {
+                showToast('Please fill out full name and delivery address.');
+                return;
+            }
+
+            cart = [];
+            updateCartUI();
+            toggleCartDrawer();
+
+            showToast(`Order received! Thank you, ${name}.`);
+        }
+
+        // Matrix Rain Canvas Animation (Vodka Bottle Matrix Effect)
+        function initMatrixRain() {
+            const canvas = document.getElementById('matrixCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const fontSize = 16;
+            const columns = Math.floor(canvas.width / 40);
+            const drops = Array(columns).fill(1);
+
+            function draw() {
+                ctx.fillStyle = 'rgba(9, 10, 15, 0.12)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#10b981';
+                ctx.font = `${fontSize}px FontAwesome, sans-serif`;
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = '🍾';
+                    ctx.fillText(text, i * 40, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+
+            setInterval(draw, 45);
+        }
+
+        // Utility Helpers
+        function confirmAge(isAdult) {
+            if (isAdult) {
+                document.getElementById('age-modal').classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                document.getElementById('age-error').classList.remove('hidden');
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
