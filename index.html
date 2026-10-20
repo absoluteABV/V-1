@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="scroll-smooth dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABSOLUTE ABV — Cosmic Dark-Luxury Elixirs</title>
-    <!-- Tailwind CSS -->
+    <title>Absolute ABV Dark Luxury Spirits</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,34 +12,42 @@
             theme: {
                 extend: {
                     colors: {
-                        obsidian: '#050508',
-                        goldaccent: '#d4af37',
-                        goldhover: '#f3e5ab',
+                        gold: {
+                            DEFAULT: '#D4AF37',
+                            light: '#F3E5AB',
+                            dark: '#997A15',
+                            accent: '#FFDF73'
+                        },
+                        obsidian: {
+                            DEFAULT: '#050505',
+                            card: '#0D0D12',
+                            border: '#1E1E28'
+                        }
                     },
                     fontFamily: {
-                        serif: ['Cinzel', 'serif'],
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Cinzel', 'Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif']
                     }
                 }
             }
         }
     </script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #050508;
-            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: #E2E8F0;
             overflow-x: hidden;
         }
-        h1, h2, h3, .font-cinzel {
+        h1, h2, h3, h4, .font-cinzel {
             font-family: 'Cinzel', serif;
         }
-        /* Cosmic Background Canvas */
-        #space-canvas {
+        /* Cosmic Twinkling Starfield Canvas */
+        #starfield {
             position: fixed;
             top: 0;
             left: 0;
@@ -48,852 +56,706 @@
             pointer-events: none;
             z-index: 0;
         }
-        /* Glassmorphism card */
-        .glass-card {
-            background: rgba(12, 12, 18, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        }
-        .gold-glow {
-            text-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #997A15 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .gold-border {
-            border-color: rgba(212, 175, 55, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        /* 3D Tilt & Wobble Container */
-        .jar-container {
-            perspective: 1000px;
-            transform-style: preserve-3d;
+        .gold-border:hover {
+            border-color: rgba(212, 175, 55, 0.8);
+            box-shadow: 0 0 35px rgba(212, 175, 55, 0.15);
         }
-        .jar-card {
-            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
-            transform-style: preserve-3d;
-        }
-        @keyframes subtle-wobble {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-6px) rotate(0.5deg); }
-        }
-        .wobble-anim {
-            animation: subtle-wobble 6s ease-in-out infinite;
-        }
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #050508;
+            background: #050505;
         }
         ::-webkit-scrollbar-thumb {
-            background: #2a2a35;
+            background: #1E1E28;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #d4af37;
+            background: #D4AF37;
         }
     </style>
 </head>
-<body class="relative min-h-screen text-neutral-100 flex flex-col selection:bg-goldaccent selection:text-black">
+<body class="relative min-h-screen">
 
-    <!-- Cosmic Space Canvas Background -->
-    <canvas id="space-canvas"></canvas>
+    <!-- Cosmic Twinkling Starfield Canvas Background -->
+    <canvas id="starfield"></canvas>
 
-    <!-- AGE GATE MODAL (18+) -->
-    <div id="age-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl transition-opacity duration-500">
-        <div class="glass-card max-w-md w-full mx-4 p-8 rounded-2xl text-center border gold-border relative overflow-hidden">
-            <div class="absolute -top-12 -left-12 w-32 h-32 bg-goldaccent/10 rounded-full blur-2xl"></div>
-            <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-900/20 rounded-full blur-2xl"></div>
+    <!-- 1. Age Verification Modal Gate (18+) -->
+    <div id="age-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-obsidian/95 backdrop-blur-2xl px-4 transition-opacity duration-700">
+        <div class="max-w-md w-full bg-obsidian-card gold-border p-8 rounded-2xl text-center shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-gold/10 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-gold/10 rounded-full blur-2xl"></div>
             
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-goldaccent/10 text-goldaccent mb-6 border gold-border">
-                <i class="fa-solid fa-wine-bottle text-2xl"></i>
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gold/10 text-gold mb-6 border border-gold/30">
+                <i class="fa-solid fa-crown text-2xl"></i>
             </div>
             
-            <h2 class="text-3xl font-bold font-cinzel text-goldaccent mb-2">ABSOLUTE ABV</h2>
-            <p class="text-xs uppercase tracking-[0.3em] text-neutral-400 mb-6">Dark Luxury Elixirs</p>
+            <h2 class="text-3xl font-bold font-cinzel text-gold mb-2">Absolute ABV</h2>
+            <p class="text-xs uppercase tracking-widest text-gold/70 mb-6 font-semibold">Dark Luxury Spirits Aotearoa</p>
             
-            <p class="text-sm text-neutral-300 mb-8 leading-relaxed">
-                You must be of legal drinking age in your jurisdiction to enter this sanctuary of premium crafted distillations.
+            <p class="text-sm text-gray-300 mb-8 leading-relaxed">
+                You are entering a realm of uncompromising artisanal spirits and select luxury goods. Please confirm you are of legal age (18+).
             </p>
             
             <div class="space-y-3">
-                <button onclick="verifyAge(true)" class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-goldaccent to-yellow-600 text-black font-bold uppercase tracking-wider text-sm hover:opacity-90 transition shadow-lg shadow-goldaccent/20 cursor-pointer">
-                    I am 18 or Older — Enter
+                <button onclick="verifyAge(true)" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-gold-dark via-gold to-gold-light text-obsidian font-bold font-cinzel tracking-wider uppercase hover:opacity-95 transition shadow-lg shadow-gold/20 cursor-pointer">
+                    I am 18 or older — Enter Realm
                 </button>
-                <button onclick="verifyAge(false)" class="w-full py-3 px-6 rounded-xl bg-transparent border border-neutral-700 text-neutral-400 hover:text-white hover:border-neutral-500 transition text-sm cursor-pointer">
-                    Exit Site
+                <button onclick="verifyAge(false)" class="w-full py-3 px-6 rounded-xl bg-transparent border border-gray-700 text-gray-400 font-medium hover:text-white hover:border-gray-500 transition text-sm cursor-pointer">
+                    Exit
                 </button>
             </div>
-            
-            <p class="text-[10px] text-neutral-500 mt-6 tracking-widest uppercase">Please Drink Responsibly</p>
+            <p class="text-[10px] text-gray-500 mt-6">Please enjoy our elixirs responsibly. Strictly 18+.</p>
         </div>
     </div>
 
-    <!-- MAIN CONTENT WRAPPER -->
-    <div id="main-content" class="relative z-10 flex flex-col min-h-screen opacity-0 pointer-events-none transition-opacity duration-700">
-        
-        <!-- HEADER / NAVBAR -->
-        <header class="sticky top-0 z-40 backdrop-blur-md bg-obsidian/85 border-b border-neutral-800/80">
+    <!-- Main Platform Wrapper (Hidden until verified) -->
+    <div id="main-app" class="opacity-0 pointer-events-none transition-opacity duration-1000 relative z-10 flex flex-col min-h-screen">
+
+        <!-- 2. Sticky Top Navigation Tabs & Smooth Scrolling -->
+        <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-obsidian-border">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-goldaccent to-neutral-800 flex items-center justify-center text-black font-bold font-cinzel text-xl shadow-md">
-                        A
+                <a href="#home" class="flex items-center space-x-3 group">
+                    <div class="w-10 h-10 rounded-full bg-gold/10 border border-gold/40 flex items-center justify-center text-gold group-hover:scale-105 transition">
+                        <i class="fa-solid fa-gem text-sm"></i>
                     </div>
                     <div>
-                        <span class="font-cinzel font-bold text-lg tracking-widest bg-gradient-to-r from-white via-neutral-200 to-goldaccent bg-clip-text text-transparent">ABSOLUTE ABV</span>
-                        <span class="block text-[9px] tracking-[0.25em] text-goldaccent uppercase">Cosmic Distillations</span>
+                        <span class="text-lg sm:text-xl font-bold font-cinzel tracking-wider gold-gradient-text block">ABSOLUTE ABV</span>
+                        <span class="text-[9px] uppercase tracking-[0.2em] text-gray-400 block">Dark Luxury Spirits</span>
                     </div>
-                </div>
-                
-                <nav class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wider text-neutral-300">
-                    <a href="#collection" class="hover:text-goldaccent transition">COLLECTION</a>
-                    <a href="#mixology" class="hover:text-goldaccent transition">MIXOLOGY LAB</a>
-                    <a href="#heritage" class="hover:text-goldaccent transition">HERITAGE</a>
+                </a>
+
+                <nav class="hidden xl:flex items-center space-x-6 text-sm font-medium tracking-wide">
+                    <a href="#home" class="text-gold font-semibold transition hover:text-gold-light">Home</a>
+                    <a href="#products" class="text-gray-300 hover:text-gold transition">Spirits</a>
+                    <a href="#vapes" class="text-gray-300 hover:text-gold transition">Cheeky Choof / Vapes</a>
+                    <a href="#mixology" class="text-gray-300 hover:text-gold transition">Mixology Lab</a>
+                    <a href="#signal" class="text-gray-300 hover:text-gold transition">Signal Portal</a>
                 </nav>
 
                 <div class="flex items-center space-x-4">
-                    <a href="https://signal.me/#p/@Mrvodka.64" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-neutral-900 border gold-border text-goldaccent hover:bg-goldaccent hover:text-black transition text-xs font-bold tracking-wider shadow-lg">
-                        <i class="fa-brands fa-telegram text-sm"></i>
-                        <span>SIGNAL ORDER</span>
+                    <a href="https://signal.me/#eu/FU_3g7DdgSyOsqyp_PqI76s3CgBRUHrNbjpGLQYxRVkD6BZTiutKe5sRHfNedR5P" target="_blank" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold-dark to-gold text-obsidian font-bold text-xs font-cinzel tracking-wider uppercase hover:opacity-90 transition shadow-md shadow-gold/10 flex items-center space-x-2">
+                        <i class="fa-brands fa-signal-messenger"></i>
+                        <span class="hidden sm:inline">Signal Portal</span>
                     </a>
                 </div>
             </div>
         </header>
 
-        <!-- HERO SECTION -->
-        <section class="relative pt-20 pb-16 px-4 text-center max-w-5xl mx-auto">
-            <div class="inline-block px-4 py-1.5 rounded-full bg-goldaccent/10 border gold-border text-goldaccent text-xs font-semibold tracking-[0.2em] uppercase mb-6">
-                Handcrafted in Small Stellar Batches
-            </div>
-            <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold font-cinzel tracking-tight mb-6 leading-tight">
-                THE PINNACLE OF <span class="bg-gradient-to-r from-goldaccent via-yellow-200 to-amber-500 bg-clip-text text-transparent gold-glow">DARK LUXURY</span>
-            </h1>
-            <p class="text-neutral-400 text-base sm:text-lg max-w-2xl mx-auto mb-10 font-light leading-relaxed">
-                Forged from deep cosmic harmony and distilled with uncompromising precision. Experience apothecary-grade spirits presented in heavy craft glass jars.
-            </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#collection" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-goldaccent text-black font-bold uppercase tracking-wider text-sm hover:bg-goldhover transition shadow-xl shadow-goldaccent/20">
-                    Explore Collection
-                </a>
-                <a href="https://signal.me/#p/@Mrvodka.64" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-neutral-900 border gold-border text-white font-bold uppercase tracking-wider text-sm hover:bg-neutral-800 transition">
-                    Contact @Mrvodka.64
-                </a>
-            </div>
-        </section>
-
-        <!-- SIDE-BY-SIDE PRODUCT COLLECTION -->
-        <section id="collection" class="py-16 px-4 max-w-7xl mx-auto w-full">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-bold font-cinzel mb-3 text-goldaccent">THE SIGNATURE JARS</h2>
-                <div class="w-24 h-0.5 bg-goldaccent mx-auto mb-4"></div>
-                <p class="text-neutral-400 text-sm tracking-wider uppercase">Heavy apothecary glass with secure metal screw-caps</p>
-            </div>
-
-            <!-- Side-by-side grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-                
-                <!-- PRODUCT 1: OBSIDIAN ABV -->
-                <div class="jar-container">
-                    <div class="jar-card glass-card rounded-3xl p-8 border gold-border relative flex flex-col items-center group overflow-hidden wobble-anim" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
-                        
-                        <div class="absolute -top-20 -right-20 w-48 h-48 bg-purple-900/30 rounded-full blur-3xl pointer-events-none group-hover:bg-purple-700/40 transition duration-500"></div>
-
-                        <div class="w-full flex justify-between items-center mb-6">
-                            <span class="px-3 py-1 rounded-full bg-neutral-900/80 border border-neutral-700 text-neutral-300 text-xs font-mono tracking-widest">
-                                BATCH #001
-                            </span>
-                            <span class="px-3 py-1 rounded-full bg-goldaccent/10 border gold-border text-goldaccent text-xs font-bold tracking-widest">
-                                40% ABV • 500 ML
-                            </span>
-                        </div>
-
-                        <!-- Visual Jar Graphic with STRICT CLEAN LABEL (Title, Price, ABV/Volume only) -->
-                        <div class="relative w-48 h-72 my-4 flex items-center justify-center cursor-pointer" onclick="openOrderModal('Obsidian ABV', '$50.00', '40% ABV')">
-                            <div class="absolute top-0 w-28 h-6 bg-gradient-to-r from-neutral-600 via-neutral-300 to-neutral-700 rounded-t-lg border border-neutral-400 shadow-md z-20"></div>
-                            <div class="absolute top-6 w-32 h-3 bg-neutral-800 rounded-sm z-20"></div>
-                            
-                            <div class="absolute top-8 w-44 h-60 rounded-2xl bg-gradient-to-br from-neutral-900/90 via-neutral-900/60 to-purple-950/40 border-2 border-neutral-600/40 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center p-3 overflow-hidden group-hover:border-goldaccent/60 transition duration-300">
-                                <div class="absolute bottom-0 left-0 right-0 h-4/5 bg-gradient-to-t from-black via-neutral-950 to-neutral-900 opacity-90 border-t border-purple-500/20">
-                                    <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(212,175,55,0.15)_0%,transparent_70%)] animate-pulse"></div>
-                                </div>
-                                
-                                <!-- STRICT CLEAN APOTHECARY LABEL -->
-                                <div class="relative z-10 w-36 py-3 px-2 bg-neutral-950/95 border border-goldaccent/50 rounded shadow-2xl text-center flex flex-col items-center justify-center">
-                                    <div class="text-[8px] uppercase tracking-[0.25em] text-neutral-400 mb-0.5 font-sans">ABSOLUTE ABV</div>
-                                    <h3 class="font-cinzel font-bold text-xs text-goldaccent tracking-wider mb-1">OBSIDIAN ABV</h3>
-                                    <div class="w-10 h-[1px] bg-goldaccent/50 my-1"></div>
-                                    <span class="text-[10px] font-mono text-neutral-300 font-bold">$50.00 • 500ml</span>
-                                </div>
-                                
-                                <div class="absolute top-8 left-2 w-3 h-56 bg-gradient-to-b from-white/20 to-transparent rounded-full pointer-events-none"></div>
-                            </div>
-                        </div>
-
-                        <!-- Product Info -->
-                        <div class="text-center mt-6 w-full">
-                            <h3 class="text-2xl font-bold font-cinzel text-goldaccent mb-1">Obsidian ABV</h3>
-                            
-                            <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-neutral-900/80 border border-neutral-800 my-6">
-                                <span class="text-neutral-400 text-xs">Price</span>
-                                <span class="text-xl font-bold font-mono text-goldaccent">$50.00 USD</span>
-                            </div>
-
-                            <button onclick="openOrderModal('Obsidian ABV', '$50.00', '40% ABV')" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-goldaccent to-yellow-600 text-black font-bold uppercase tracking-wider text-xs hover:opacity-90 transition shadow-lg shadow-goldaccent/10 cursor-pointer">
-                                Secure Via Signal
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- PRODUCT 2: TROPICAL HEAT -->
-                <div class="jar-container">
-                    <div class="jar-card glass-card rounded-3xl p-8 border gold-border relative flex flex-col items-center group overflow-hidden wobble-anim" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
-                        
-                        <div class="absolute -top-20 -right-20 w-48 h-48 bg-amber-900/30 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-600/40 transition duration-500"></div>
-
-                        <div class="w-full flex justify-between items-center mb-6">
-                            <span class="px-3 py-1 rounded-full bg-neutral-900/80 border border-neutral-700 text-neutral-300 text-xs font-mono tracking-widest">
-                                BATCH #002
-                            </span>
-                            <span class="px-3 py-1 rounded-full bg-goldaccent/10 border gold-border text-goldaccent text-xs font-bold tracking-widest">
-                                30% ABV • 500 ML
-                            </span>
-                        </div>
-
-                        <!-- Visual Jar Graphic with STRICT CLEAN LABEL -->
-                        <div class="relative w-48 h-72 my-4 flex items-center justify-center cursor-pointer" onclick="openOrderModal('Tropical Heat', '$45.00', '30% ABV')">
-                            <div class="absolute top-0 w-28 h-6 bg-gradient-to-r from-neutral-600 via-neutral-300 to-neutral-700 rounded-t-lg border border-neutral-400 shadow-md z-20"></div>
-                            <div class="absolute top-6 w-32 h-3 bg-neutral-800 rounded-sm z-20"></div>
-                            
-                            <div class="absolute top-8 w-44 h-60 rounded-2xl bg-gradient-to-br from-neutral-900/90 via-neutral-900/60 to-amber-950/40 border-2 border-neutral-600/40 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center p-3 overflow-hidden group-hover:border-goldaccent/60 transition duration-300">
-                                <div class="absolute bottom-0 left-0 right-0 h-4/5 bg-gradient-to-t from-amber-950 via-amber-900 to-yellow-950 opacity-90 border-t border-amber-500/20">
-                                    <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(255,165,0,0.15)_0%,transparent_70%)] animate-pulse"></div>
-                                </div>
-                                
-                                <!-- STRICT CLEAN APOTHECARY LABEL -->
-                                <div class="relative z-10 w-36 py-3 px-2 bg-neutral-950/95 border border-goldaccent/50 rounded shadow-2xl text-center flex flex-col items-center justify-center">
-                                    <div class="text-[8px] uppercase tracking-[0.25em] text-neutral-400 mb-0.5 font-sans">ABSOLUTE ABV</div>
-                                    <h3 class="font-cinzel font-bold text-xs text-goldaccent tracking-wider mb-1">TROPICAL HEAT</h3>
-                                    <div class="w-10 h-[1px] bg-goldaccent/50 my-1"></div>
-                                    <span class="text-[10px] font-mono text-neutral-300 font-bold">$45.00 • 500ml</span>
-                                </div>
-                                
-                                <div class="absolute top-8 left-2 w-3 h-56 bg-gradient-to-b from-white/20 to-transparent rounded-full pointer-events-none"></div>
-                            </div>
-                        </div>
-
-                        <!-- Product Info -->
-                        <div class="text-center mt-6 w-full">
-                            <h3 class="text-2xl font-bold font-cinzel text-goldaccent mb-1">Tropical Heat</h3>
-                            
-                            <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-neutral-900/80 border border-neutral-800 my-6">
-                                <span class="text-neutral-400 text-xs">Price</span>
-                                <span class="text-xl font-bold font-mono text-goldaccent">$45.00 USD</span>
-                            </div>
-
-                            <button onclick="openOrderModal('Tropical Heat', '$45.00', '30% ABV')" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-goldaccent to-yellow-600 text-black font-bold uppercase tracking-wider text-xs hover:opacity-90 transition shadow-lg shadow-goldaccent/10 cursor-pointer">
-                                Secure Via Signal
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- INTERACTIVE MIXOLOGY LAB & PHYSICS ENGINE -->
-        <section id="mixology" class="py-20 px-4 max-w-5xl mx-auto w-full">
-            <div class="glass-card rounded-3xl p-8 sm:p-12 border gold-border relative overflow-hidden">
-                <div class="absolute -top-32 -right-32 w-64 h-64 bg-goldaccent/10 rounded-full blur-3xl pointer-events-none"></div>
-                
-                <div class="text-center max-w-2xl mx-auto mb-12">
-                    <span class="text-xs uppercase tracking-[0.3em] text-goldaccent font-semibold">Interactive Laboratory</span>
-                    <h2 class="text-3xl sm:text-4xl font-bold font-cinzel mt-2 mb-4">MIXOLOGY CALCULATOR</h2>
-                    <p class="text-neutral-400 text-sm leading-relaxed">
-                        Customize spirit, tonic, soda, and mixer volumes with exact ABV computation. Adjust ice count (1–6) to deploy drop-in physics with centered liquid splash waves and strict non-overlapping spatial float separation.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    
-                    <!-- Controls Column -->
-                    <div class="lg:col-span-7 space-y-5">
-                        
-                        <div>
-                            <label class="block text-xs uppercase tracking-widest text-neutral-300 mb-2 font-semibold">Base Spirit Selection</label>
-                            <div class="grid grid-cols-2 gap-3">
-                                <button onclick="setElixirType('obsidian')" id="btn-obsidian" class="py-3 px-4 rounded-xl bg-goldaccent text-black font-bold text-xs uppercase tracking-wider transition cursor-pointer">
-                                    Obsidian (40% ABV)
-                                </button>
-                                <button onclick="setElixirType('tropical')" id="btn-tropical" class="py-3 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold text-xs uppercase tracking-wider transition cursor-pointer hover:border-goldaccent">
-                                    Tropical Heat (30% ABV)
-                                </button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="text-xs uppercase tracking-widest text-neutral-300 font-semibold">Spirit Volume (ml)</label>
-                                <span id="spirit-vol-label" class="text-xs font-mono text-goldaccent font-bold">50 ML</span>
-                            </div>
-                            <input type="range" id="spirit-slider" min="0" max="250" value="50" step="5" oninput="updateMixology()" class="w-full accent-[#d4af37] bg-neutral-800 rounded-lg h-2 cursor-pointer">
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="text-xs uppercase tracking-widest text-neutral-300 font-semibold">Tonic Water Volume (ml)</label>
-                                <span id="tonic-vol-label" class="text-xs font-mono text-goldaccent font-bold">100 ML</span>
-                            </div>
-                            <input type="range" id="tonic-slider" min="0" max="300" value="100" step="10" oninput="updateMixology()" class="w-full accent-[#d4af37] bg-neutral-800 rounded-lg h-2 cursor-pointer">
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="text-xs uppercase tracking-widest text-neutral-300 font-semibold">Soda & Mixers Volume (ml)</label>
-                                <span id="mixer-vol-label" class="text-xs font-mono text-goldaccent font-bold">50 ML</span>
-                            </div>
-                            <input type="range" id="mixer-slider" min="0" max="200" value="50" step="10" oninput="updateMixology()" class="w-full accent-[#d4af37] bg-neutral-800 rounded-lg h-2 cursor-pointer">
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="text-xs uppercase tracking-widest text-neutral-300 font-semibold">Chilled Ice Density (1 - 6 Cubes)</label>
-                                <span id="ice-label" class="text-xs font-mono text-goldaccent font-bold">3 Cubes</span>
-                            </div>
-                            <input type="range" id="ice-slider" min="1" max="6" value="3" step="1" oninput="updateMixology()" class="w-full accent-[#d4af37] bg-neutral-800 rounded-lg h-2 cursor-pointer">
-                        </div>
-
-                        <div class="p-5 rounded-xl bg-neutral-900/90 border border-neutral-800 flex items-center justify-between">
-                            <div>
-                                <span class="block text-[10px] uppercase tracking-widest text-neutral-500">Total Liquid Volume</span>
-                                <span id="total-vol-output" class="text-lg font-bold font-mono text-white">200 ML</span>
-                            </div>
-                            <div class="text-right">
-                                <span class="block text-[10px] uppercase tracking-widest text-neutral-500">Calculated Final ABV</span>
-                                <span id="potency-output" class="text-2xl font-bold font-mono text-goldaccent">10.0% ABV</span>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Visualizer Glass Column with Physics Engine -->
-                    <div class="lg:col-span-5 flex flex-col items-center justify-center">
-                        <div class="relative w-48 h-72 flex items-center justify-center">
-                            
-                            <!-- Glass Rim -->
-                            <div class="absolute top-0 w-36 h-4 bg-neutral-800 rounded-full border border-neutral-600 z-30 shadow-md"></div>
-                            
-                            <!-- Glass Beaker Body Container -->
-                            <div id="glass-beaker" class="absolute top-3 w-40 h-64 rounded-b-3xl bg-neutral-900/40 border-2 border-neutral-600/50 backdrop-blur-sm overflow-hidden shadow-2xl">
-                                
-                                <!-- Dynamic Liquid Fill Layer -->
-                                <div id="liquid-fill" class="absolute bottom-0 left-0 right-0 transition-all duration-200 bg-gradient-to-t from-black via-purple-950 to-neutral-900 opacity-90 pointer-events-none" style="height: 50%;">
-                                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-white/40 backdrop-blur-md"></div>
-                                </div>
-
-                                <!-- Centered Splash & Ripple DOM Container -->
-                                <div id="splash-container" class="absolute inset-0 pointer-events-none z-20 overflow-hidden"></div>
-
-                                <!-- Physics Ice Cubes Container -->
-                                <div id="physics-ice-container" class="absolute inset-0 pointer-events-none z-20"></div>
-
-                            </div>
-                            
-                            <div class="absolute top-6 left-3 w-2 h-56 bg-gradient-to-b from-white/30 to-transparent rounded-full pointer-events-none z-30"></div>
-                        </div>
-                        <span class="text-[11px] uppercase tracking-[0.2em] text-neutral-400 mt-4">2D Physics & Buoyancy Simulation</span>
-                    </div>
-
-                </div>
-
-            </div>
-        </section>
-
-        <!-- SIGNAL ORDER MODAL -->
-        <div id="order-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="glass-card max-w-md w-full mx-4 p-8 rounded-2xl border gold-border relative">
-                <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-neutral-400 hover:text-white transition cursor-pointer">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-                
-                <div class="text-center mb-6">
-                    <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-goldaccent/10 text-goldaccent mb-4 border gold-border">
-                        <i class="fa-brands fa-telegram text-2xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold font-cinzel text-goldaccent">SECURE VIA SIGNAL</h3>
-                    <p class="text-xs uppercase tracking-widest text-neutral-400 mt-1">Exclusive Direct Encrypted Ordering</p>
-                </div>
-
-                <div class="space-y-4 mb-6">
-                    <div class="p-4 rounded-xl bg-neutral-900 border border-neutral-800">
-                        <span class="block text-[10px] uppercase tracking-widest text-neutral-500 mb-1">Selected Elixir</span>
-                        <span id="modal-product-name" class="font-bold font-cinzel text-lg text-white">Obsidian ABV</span>
-                        <div class="flex justify-between items-center mt-2 pt-2 border-t border-neutral-800 text-xs font-mono">
-                            <span id="modal-product-price" class="text-goldaccent font-bold">$50.00</span>
-                            <span id="modal-product-abv" class="text-neutral-400">40% ABV</span>
-                        </div>
-                    </div>
-
-                    <p class="text-xs text-neutral-300 leading-relaxed text-center">
-                        All orders, wholesale inquiries, and private allocations are handled securely and confidentially via Signal with our master curator.
-                    </p>
-                </div>
-
-                <a id="signal-link" href="https://signal.me/#p/@Mrvodka.64" target="_blank" rel="noopener noreferrer" class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-goldaccent to-yellow-600 text-black font-bold uppercase tracking-wider text-xs hover:opacity-90 transition shadow-lg shadow-goldaccent/20 flex items-center justify-center space-x-2 cursor-pointer">
-                    <i class="fa-brands fa-telegram text-base"></i>
-                    <span>Message @Mrvodka.64 on Signal</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- FOOTER -->
-        <footer class="mt-auto border-t border-neutral-800 bg-obsidian py-12 px-4">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 rounded bg-goldaccent flex items-center justify-center text-black font-bold font-cinzel">A</div>
-                    <span class="font-cinzel font-bold text-sm tracking-widest text-white">ABSOLUTE ABV</span>
+        <!-- 3. Hero Section: Elixirs of the Cosmic Abyss -->
+        <section id="home" class="relative py-28 md:py-40 flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+            <div class="absolute inset-0 bg-radial-gradient from-gold/5 via-transparent to-transparent pointer-events-none"></div>
+            
+            <div class="max-w-4xl mx-auto space-y-6 relative z-10">
+                <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 text-gold text-xs font-semibold tracking-widest uppercase mb-2">
+                    <i class="fa-solid fa-star text-[10px]"></i>
+                    <span>Cosmic Black & Gold Luxury Edition</span>
                 </div>
                 
-                <p class="text-xs text-neutral-500 tracking-wider">
-                    © 2026 Absolute ABV. All Rights Reserved. Strictly 18+. Enjoy Responsibly.
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black font-cinzel tracking-tight leading-tight">
+                    Elixirs of the <span class="gold-gradient-text">Cosmic Abyss</span>
+                </h1>
+                
+                <p class="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto font-light leading-relaxed">
+                    Distilled under starlight and aged in charred volcanic oak. Explore our apothecary spirits, premium vapes, and custom mixology laboratory.
                 </p>
 
-                <div class="flex items-center space-x-4">
-                    <a href="https://signal.me/#p/@Mrvodka.64" target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-goldaccent transition text-sm">
-                        <i class="fa-brands fa-telegram text-lg"></i> @Mrvodka.64
+                <div class="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#products" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-gold-dark via-gold to-gold-light text-obsidian font-bold font-cinzel tracking-widest uppercase hover:opacity-95 transition shadow-xl shadow-gold/20 text-sm">
+                        Explore Spirits
+                    </a>
+                    <a href="#vapes" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-obsidian-card gold-border text-gold font-bold font-cinzel tracking-widest uppercase hover:bg-gold/10 transition text-sm">
+                        Cheeky Choof / Vapes
                     </a>
                 </div>
+            </div>
+        </section>
+
+        <!-- 4. Products Section (Obsidian Night & Tropical Apex - Descriptions Removed) -->
+        <section id="products" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-[0.3em] text-gold font-semibold block mb-2">Flagship Collection</span>
+                <h2 class="text-3xl sm:text-4xl font-bold font-cinzel">Exclusive Apothecary Edition</h2>
+                <div class="w-24 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+
+                <!-- Product 1: Obsidian Night ($50, was $110) -->
+                <div class="bg-obsidian-card gold-border rounded-3xl p-8 sm:p-10 flex flex-col justify-between relative group overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-3xl pointer-events-none group-hover:bg-gold/10 transition duration-700"></div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between mb-8">
+                            <span class="px-3.5 py-1.5 rounded-full bg-obsidian border border-gold/30 text-gold text-xs font-semibold tracking-wider uppercase font-cinzel">
+                                Flagship Reserve
+                            </span>
+                            <span class="text-2xl sm:text-3xl font-bold font-cinzel text-gold">$50 <span class="text-xs font-normal text-gray-400">NZD</span></span>
+                        </div>
+
+                        <!-- Bottle SVG Visual -->
+                        <div class="relative h-56 bg-obsidian/60 rounded-2xl border border-obsidian-border flex items-center justify-center mb-8 overflow-hidden group-hover:border-gold/40 transition">
+                            <svg class="w-28 h-44 drop-shadow-[0_15px_25px_rgba(212,175,55,0.2)] group-hover:scale-105 transition duration-500" viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="45" y="10" width="30" height="20" rx="3" fill="#997A15"/>
+                                <rect x="48" y="30" width="24" height="25" fill="#0D0D12" stroke="#D4AF37" stroke-width="2"/>
+                                <path d="M30 55C30 50 35 45 42 45H78C85 45 90 50 90 55V180C90 186 85 190 78 190H42C35 190 30 186 30 180V55Z" fill="#0D0D12" stroke="#D4AF37" stroke-width="2.5"/>
+                                <path d="M32 80H88V180C88 184 84 188 78 188H42C36 188 32 184 32 180V80Z" fill="#180C2E" opacity="0.9"/>
+                                <rect x="38" y="85" width="44" height="75" rx="4" fill="#050505" stroke="#D4AF37" stroke-width="1.5"/>
+                                <text x="60" y="122" font-family="Cinzel" font-size="6" fill="#F3E5AB" text-anchor="middle" font-weight="bold">OBSIDIAN</text>
+                                <text x="60" y="132" font-family="Cinzel" font-size="5" fill="#D4AF37" text-anchor="middle">NIGHT</text>
+                            </svg>
+                        </div>
+
+                        <h3 class="text-2xl font-bold font-cinzel text-gold mb-6">Obsidian Night</h3>
+
+                        <!-- Bold Specs -->
+                        <div class="grid grid-cols-2 gap-4 mb-8 bg-obsidian p-4 rounded-xl border border-obsidian-border text-center">
+                            <div>
+                                <span class="text-[10px] uppercase text-gray-400 block">Alcohol By Volume</span>
+                                <span class="text-lg font-bold font-cinzel text-gold">50% ABV</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase text-gray-400 block">Bottle Volume</span>
+                                <span class="text-lg font-bold font-cinzel text-gold">500 ml</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sale Signage at Bottom -->
+                    <div class="pt-4 border-t border-obsidian-border flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <div class="text-center sm:text-left">
+                            <span class="text-xs text-gray-400 line-through mr-2">Was $110</span>
+                            <span class="text-xs font-bold text-gold uppercase tracking-wider bg-gold/10 px-2.5 py-1 rounded-md border border-gold/30">Now $50 (Save $60 / 55% Off)</span>
+                        </div>
+                        <a href="https://signal.me/#eu/FU_3g7DdgSyOsqyp_PqI76s3CgBRUHrNbjpGLQYxRVkD6BZTiutKe5sRHfNedR5P" target="_blank" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-gold-dark via-gold to-gold-light text-obsidian font-bold font-cinzel text-xs tracking-wider uppercase hover:opacity-95 transition shadow-lg shadow-gold/15 text-center">
+                            Acquire
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Product 2: Tropical Apex ($45, was $110) -->
+                <div class="bg-obsidian-card gold-border rounded-3xl p-8 sm:p-10 flex flex-col justify-between relative group overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-3xl pointer-events-none group-hover:bg-gold/10 transition duration-700"></div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between mb-8">
+                            <span class="px-3.5 py-1.5 rounded-full bg-obsidian border border-gold/30 text-gold text-xs font-semibold tracking-wider uppercase font-cinzel">
+                                Flagship Reserve
+                            </span>
+                            <span class="text-2xl sm:text-3xl font-bold font-cinzel text-gold">$45 <span class="text-xs font-normal text-gray-400">NZD</span></span>
+                        </div>
+
+                        <!-- Bottle SVG Visual -->
+                        <div class="relative h-56 bg-obsidian/60 rounded-2xl border border-obsidian-border flex items-center justify-center mb-8 overflow-hidden group-hover:border-gold/40 transition">
+                            <svg class="w-28 h-44 drop-shadow-[0_15px_25px_rgba(212,175,55,0.2)] group-hover:scale-105 transition duration-500" viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="45" y="10" width="30" height="20" rx="3" fill="#D4AF37"/>
+                                <rect x="48" y="30" width="24" height="25" fill="#0D0D12" stroke="#D4AF37" stroke-width="2"/>
+                                <path d="M30 55C30 50 35 45 42 45H78C85 45 90 50 90 55V180C90 186 85 190 78 190H42C35 190 30 186 30 180V55Z" fill="#0D0D12" stroke="#D4AF37" stroke-width="2.5"/>
+                                <path d="M32 80H88V180C88 184 84 188 78 188H42C36 188 32 184 32 180V80Z" fill="#3D2206" opacity="0.9"/>
+                                <rect x="38" y="85" width="44" height="75" rx="4" fill="#050505" stroke="#D4AF37" stroke-width="1.5"/>
+                                <text x="60" y="122" font-family="Cinzel" font-size="6" fill="#F3E5AB" text-anchor="middle" font-weight="bold">TROPICAL</text>
+                                <text x="60" y="132" font-family="Cinzel" font-size="5" fill="#D4AF37" text-anchor="middle">APEX</text>
+                            </svg>
+                        </div>
+
+                        <h3 class="text-2xl font-bold font-cinzel text-gold mb-6">Tropical Apex</h3>
+
+                        <!-- Bold Specs -->
+                        <div class="grid grid-cols-2 gap-4 mb-8 bg-obsidian p-4 rounded-xl border border-obsidian-border text-center">
+                            <div>
+                                <span class="text-[10px] uppercase text-gray-400 block">Alcohol By Volume</span>
+                                <span class="text-lg font-bold font-cinzel text-gold">35% ABV</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase text-gray-400 block">Bottle Volume</span>
+                                <span class="text-lg font-bold font-cinzel text-gold">500 ml</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sale Signage at Bottom -->
+                    <div class="pt-4 border-t border-obsidian-border flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <div class="text-center sm:text-left">
+                            <span class="text-xs text-gray-400 line-through mr-2">Was $110</span>
+                            <span class="text-xs font-bold text-gold uppercase tracking-wider bg-gold/10 px-2.5 py-1 rounded-md border border-gold/30">Now $45 (Save $65 / 59% Off)</span>
+                        </div>
+                        <a href="https://signal.me/#eu/FU_3g7DdgSyOsqyp_PqI76s3CgBRUHrNbjpGLQYxRVkD6BZTiutKe5sRHfNedR5P" target="_blank" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-gold-dark via-gold to-gold-light text-obsidian font-bold font-cinzel text-xs tracking-wider uppercase hover:opacity-95 transition shadow-lg shadow-gold/15 text-center">
+                            Acquire
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 5. Cheeky Choof / Vape Purchase Collection Page -->
+        <section id="vapes" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+            <div class="bg-obsidian-card gold-border rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-2xl">
+                <div class="absolute -top-32 -left-32 w-96 h-96 bg-gold/5 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-xs uppercase tracking-[0.3em] text-gold font-semibold block mb-2">Exclusive Accessories</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold font-cinzel">Cheeky Choof / Vape Purchase</h2>
+                    <p class="text-gray-300 text-sm mt-4 leading-relaxed">
+                        Curated high-end IGET Luna KP13000 series disposables. Special limited release pricing.
+                    </p>
+                    <div class="w-24 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-6"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                    
+                    <!-- Vape Item 1: IGET Luna KP13000 Pomegranate Kiwifruit ($40) -->
+                    <div class="bg-obsidian p-8 rounded-2xl border border-obsidian-border flex flex-col justify-between hover:border-gold/40 transition">
+                        <div>
+                            <div class="flex items-center justify-between mb-6">
+                                <span class="px-3 py-1 rounded-full bg-obsidian-card border border-gold/30 text-gold text-xs font-semibold uppercase font-cinzel">
+                                    IGET Luna KP13000
+                                </span>
+                                <span class="text-2xl font-bold font-cinzel text-gold">$40 <span class="text-xs font-normal text-gray-400">NZD</span></span>
+                            </div>
+
+                            <div class="h-44 bg-obsidian-card rounded-xl border border-obsidian-border flex items-center justify-center mb-6 overflow-hidden p-4">
+                                <div class="text-center space-y-2">
+                                    <i class="fa-solid fa-smoking text-gold text-4xl opacity-90"></i>
+                                    <div class="font-cinzel font-bold text-sm text-gold tracking-wide">POMEGRANATE KIWIFRUIT</div>
+                                </div>
+                            </div>
+
+                            <h3 class="text-xl font-bold font-cinzel text-gold mb-4 text-center">IGET Luna KP13000 Pomegranate Kiwifruit</h3>
+
+                            <div class="bg-obsidian-card p-4 rounded-xl border border-obsidian-border text-center mb-6">
+                                <span class="text-[10px] uppercase text-gray-400 block mb-1">Puff Capacity</span>
+                                <span class="text-xl font-bold font-cinzel text-gold">13,000 Puffs</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-obsidian-border flex flex-col sm:flex-row items-center justify-between gap-3">
+                            <div class="text-center sm:text-left">
+                                <span class="text-xs text-gray-400 line-through mr-2">Was $65</span>
+                                <span class="text-xs font-bold text-gold uppercase tracking-wider bg-gold/10 px-2 py-1 rounded-md border border-gold/30">Now $40 (Save $25)</span>
+                            </div>
+                            <a href="https://signal.me/#eu/FU_3g7DdgSyOsqyp_PqI76s3CgBRUHrNbjpGLQYxRVkD6BZTiutKe5sRHfNedR5P" target="_blank" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-gold-dark via-gold to-gold-light text-obsidian font-bold font-cinzel text-xs tracking-wider uppercase hover:opacity-95 transition shadow-lg shadow-gold/15 text-center">
+                                Acquire
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Vape Item 2: IGET Luna KP13000 Grape ($40) -->
+                    <div class="bg-obsidian p-8 rounded-2xl border border-obsidian-border flex flex-col justify-between hover:border-gold/40 transition">
+                        <div>
+                            <div class="flex items-center justify-between mb-6">
+                                <span class="px-3 py-1 rounded-full bg-obsidian-card border border-gold/30 text-gold text-xs font-semibold uppercase font-cinzel">
+                                    IGET Luna KP13000
+                                </span>
+                                <span class="text-2xl font-bold font-cinzel text-gold">$40 <span class="text-xs font-normal text-gray-400">NZD</span></span>
+                            </div>
+
+                            <div class="h-44 bg-obsidian-card rounded-xl border border-obsidian-border flex items-center justify-center mb-6 overflow-hidden p-4">
+                                <div class="text-center space-y-2">
+                                    <i class="fa-solid fa-smoking text-gold text-4xl opacity-90"></i>
+                                    <div class="font-cinzel font-bold text-sm text-gold tracking-wide">GRAPE</div>
+                                </div>
+                            </div>
+
+                            <h3 class="text-xl font-bold font-cinzel text-gold mb-4 text-center">IGET Luna KP13000 Grape</h3>
+
+                            <div class="bg-obsidian-card p-4 rounded-xl border border-obsidian-border text-center mb-6">
+                                <span class="text-[10px] uppercase text-gray-400 block mb-1">Puff Capacity</span>
+                                <span class="text-xl font-bold font-cinzel text-gold">13,000 Puffs</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-obsidian-border flex flex-col sm:flex-row items-center justify-between gap-3">
+                            <div class="text-center sm:text-left">
+                                <span class="text-xs text-gray-400 line-through mr-2">Was $65</span>
+                                <span class="text-xs font-bold text-gold uppercase tracking-wider bg-gold/10 px-2 py-1 rounded-md border border-gold/30">Now $40 (Save $25)</span>
+                            </div>
+                            <a href="https://signal.me/#eu/FU_3g7DdgSyOsqyp_PqI76s3CgBRUHrNbjpGLQYxRVkD6BZTiutKe5sRHfNedR5P" target="_blank" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-gold-dark via-gold to-gold-light text-obsidian font-bold font-cinzel text-xs tracking-wider uppercase hover:opacity-95 transition shadow-lg shadow-gold/15 text-center">
+                                Acquire
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Mixology Laboratory Calculator with Consolidated Spirit Selector -->
+        <section id="mixology" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+            <div class="bg-obsidian-card gold-border rounded-3xl p-6 sm:p-12 relative overflow-hidden shadow-2xl">
+                <div class="absolute -top-32 -right-32 w-96 h-96 bg-gold/5 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <span class="text-xs uppercase tracking-[0.3em] text-gold font-semibold block mb-2">Mixology Laboratory</span>
+                        <h2 class="text-2xl sm:text-4xl font-bold font-cinzel">Craft Custom Cruisers, Drinks & Spirits</h2>
+                    </div>
+                    <div>
+                        <button onclick="resetMixer()" class="px-4 py-2.5 rounded-xl bg-obsidian border border-obsidian-border text-gray-400 text-xs font-medium hover:text-white transition cursor-pointer">
+                            Reset Lab
+                        </button>
+                    </div>
+                </div>
+
+                <p class="text-sm text-gray-300 mb-10 max-w-3xl leading-relaxed">
+                    Select your primary spirit (*Obsidian Night* at 50% ABV or *Tropical Apex* at 35% ABV) and configure its volume alongside tonic water and craft sodas. Our laboratory calculator instantly computes your custom brew's exact total volume (ml), resulting ABV (%), and standard drinks count.
+                </p>
+
+                <!-- Laboratory Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Sliders Panel -->
+                    <div class="lg:col-span-7 space-y-6 bg-obsidian/70 p-6 sm:p-8 rounded-2xl border border-obsidian-border">
+                        <h3 class="font-cinzel font-bold text-gold text-lg mb-4 flex items-center">
+                            <i class="fa-solid fa-flask mr-2"></i> Ingredient Dispensers
+                        </h3>
+
+                        <!-- Consolidated Spirit Selector & Slider -->
+                        <div class="bg-obsidian-card p-5 rounded-xl border border-obsidian-border space-y-4">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                <div>
+                                    <span class="text-xs uppercase tracking-wider text-gray-400 block mb-0.5">Primary Spirit Base</span>
+                                    <span id="active-spirit-name" class="font-cinzel font-bold text-gold text-base">Obsidian Night (50% ABV)</span>
+                                </div>
+                                <!-- Toggle Button -->
+                                <button onclick="toggleSpirit()" class="px-4 py-2 rounded-lg bg-gold/10 border border-gold/40 text-gold text-xs font-bold font-cinzel tracking-wider uppercase hover:bg-gold/20 transition flex items-center space-x-2 cursor-pointer">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                    <span id="toggle-btn-text">Switch to Tropical Apex</span>
+                                </button>
+                            </div>
+
+                            <!-- Single Slider controlling whichever spirit is active -->
+                            <div class="space-y-2 pt-2">
+                                <div class="flex justify-between text-sm">
+                                    <span id="slider-label-text" class="font-semibold text-gray-200">Obsidian Night Volume</span>
+                                    <span id="val-active-spirit" class="font-bold text-gold">50 ml</span>
+                                </div>
+                                <input type="range" id="slider-active-spirit" min="0" max="500" step="10" value="50" oninput="updateMixology()" class="w-full accent-[#D4AF37] cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Tonic Water (0% ABV) -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="font-semibold text-gray-200">Tonic Water (0% ABV)</span>
+                                <span id="val-tonic" class="font-bold text-gold">150 ml</span>
+                            </div>
+                            <input type="range" id="slider-tonic" min="0" max="1000" step="25" value="150" oninput="updateMixology()" class="w-full accent-[#D4AF37] cursor-pointer">
+                        </div>
+
+                        <!-- Sodas (0% ABV) -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="font-semibold text-gray-200">Craft Sodas / Mixers (0% ABV)</span>
+                                <span id="val-soda" class="font-bold text-gold">100 ml</span>
+                            </div>
+                            <input type="range" id="slider-soda" min="0" max="1000" step="25" value="100" oninput="updateMixology()" class="w-full accent-[#D4AF37] cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- Results Output Panel -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="bg-obsidian/80 p-8 rounded-2xl border border-gold/30 shadow-xl space-y-6">
+                            <h3 class="font-cinzel font-bold text-gold text-xl border-b border-obsidian-border pb-3 flex items-center">
+                                <i class="fa-solid fa-calculator mr-2"></i> Spectrometric Analysis
+                            </h3>
+
+                            <div class="space-y-4">
+                                <div class="bg-obsidian-card p-4 rounded-xl border border-obsidian-border flex items-center justify-between">
+                                    <div>
+                                        <span class="text-xs uppercase tracking-wider text-gray-400 block mb-1">Total Volume</span>
+                                        <span class="text-xs text-gray-500">Combined liquid content</span>
+                                    </div>
+                                    <span id="res-volume" class="text-2xl font-bold font-cinzel text-gold">300 ml</span>
+                                </div>
+
+                                <div class="bg-obsidian-card p-4 rounded-xl border border-obsidian-border flex items-center justify-between">
+                                    <div>
+                                        <span class="text-xs uppercase tracking-wider text-gray-400 block mb-1">Resulting ABV</span>
+                                        <span class="text-xs text-gray-500">Absolute alcohol concentration</span>
+                                    </div>
+                                    <span id="res-abv" class="text-2xl font-bold font-cinzel text-gold">8.3%</span>
+                                </div>
+
+                                <div class="bg-obsidian-card p-4 rounded-xl border border-obsidian-border flex items-center justify-between">
+                                    <div>
+                                        <span class="text-xs uppercase tracking-wider text-gray-400 block mb-1">Standard Drinks (NZ)</span>
+                                        <span class="text-xs text-gray-500">10g pure alcohol units</span>
+                                    </div>
+                                    <span id="res-std" class="text-2xl font-bold font-cinzel text-gold">2.0</span>
+                                </div>
+                            </div>
+
+                            <a href="https://signal.me/#eu/FU_3g7DdgSyOsqyp_PqI76s3CgBRUHrNbjpGLQYxRVkD6BZTiutKe5sRHfNedR5P" target="_blank" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-gold-dark via-gold to-gold-light text-obsidian font-bold font-cinzel tracking-wider uppercase hover:opacity-95 transition shadow-lg shadow-gold/20 flex items-center justify-center space-x-2 text-center">
+                                <i class="fa-brands fa-signal-messenger"></i>
+                                <span>ORDER HERE OR MSG FOR INQUIREYS</span>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Signal Portal & Inquiries Page -->
+        <section id="signal" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+            <div class="bg-obsidian-card gold-border rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-2xl">
+                <div class="absolute top-0 right-0 w-80 h-80 bg-gold/5 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gold/10 text-gold mb-4 border border-gold/30">
+                        <i class="fa-brands fa-signal-messenger text-2xl"></i>
+                    </div>
+                    <span class="text-xs uppercase tracking-[0.3em] text-gold font-semibold block mb-2">Encrypted Dispatch & Signal Hub</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold font-cinzel">Signal Portal & Inquiries</h2>
+                    <p class="text-gray-300 text-sm mt-4 leading-relaxed">
+                        Absolute ABV operates exclusively through Signal for secure concierge ordering and recipe dispatch. If you do not have Signal installed on your device, download it below.
+                    </p>
+                </div>
+
+                <!-- Exact Signal CTA Button -->
+                <div class="max-w-xl mx-auto mb-12 bg-obsidian p-8 rounded-2xl border border-gold/40 text-center shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-10 -right-10 w-24 h-24 bg-gold/10 rounded-full blur-xl"></div>
+                    <h3 class="font-cinzel font-bold text-gold text-xl mb-2">Direct Concierge Link</h3>
+                    <p class="text-xs text-gray-400 mb-6">Click below to place your order or send inquiries directly.</p>
+                    
+                    <a href="https://signal.me/#eu/FU_3g7DdgSyOsqyp_PqI76s3CgBRUHrNbjpGLQYxRVkD6BZTiutKe5sRHfNedR5P" target="_blank" class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-gold-dark via-gold to-gold-light text-obsidian font-bold font-cinzel tracking-wider uppercase hover:opacity-95 transition shadow-xl shadow-gold/20 inline-flex items-center justify-center space-x-3 cursor-pointer">
+                        <i class="fa-brands fa-signal-messenger text-lg"></i>
+                        <span>ORDER HERE OR MSG FOR INQUIREYS</span>
+                    </a>
+                </div>
+
+                <!-- Signal Download Guide Across Platforms -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Windows -->
+                    <div class="bg-obsidian p-6 rounded-2xl border border-obsidian-border flex flex-col justify-between hover:border-gold/40 transition">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-gold/10 text-gold flex items-center justify-center mb-4 border border-gold/30">
+                                <i class="fa-solid fa-desktop"></i>
+                            </div>
+                            <h3 class="font-cinzel font-bold text-gold text-lg mb-2">Windows & Mac</h3>
+                            <p class="text-xs text-gray-400 mb-6 leading-relaxed">
+                                Install Signal Desktop to connect securely and coordinate spirit acquisitions from your PC or Mac.
+                            </p>
+                        </div>
+                        <a href="https://signal.org/download/" target="_blank" class="w-full py-3 rounded-xl bg-obsidian-card gold-border text-gold text-xs font-bold font-cinzel tracking-wider uppercase text-center hover:bg-gold/10 transition flex items-center justify-center space-x-2">
+                            <span>Install for Windows</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <!-- Android / Google -->
+                    <div class="bg-obsidian p-6 rounded-2xl border border-obsidian-border flex flex-col justify-between hover:border-gold/40 transition">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-gold/10 text-gold flex items-center justify-center mb-4 border border-gold/30">
+                                <i class="fa-brands fa-google-play"></i>
+                            </div>
+                            <h3 class="font-cinzel font-bold text-gold text-lg mb-2">Android & Google</h3>
+                            <p class="text-xs text-gray-400 mb-6 leading-relaxed">
+                                Get Signal from Google Play for privacy-first encrypted messaging on your Android mobile device.
+                            </p>
+                        </div>
+                        <a href="https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms" target="_blank" class="w-full py-3 rounded-xl bg-obsidian-card gold-border text-gold text-xs font-bold font-cinzel tracking-wider uppercase text-center hover:bg-gold/10 transition flex items-center justify-center space-x-2">
+                            <span>Google Play Store</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <!-- iOS / Apple -->
+                    <div class="bg-obsidian p-6 rounded-2xl border border-obsidian-border flex flex-col justify-between hover:border-gold/40 transition">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-gold/10 text-gold flex items-center justify-center mb-4 border border-gold/30">
+                                <i class="fa-brands fa-app-store-ios"></i>
+                            </div>
+                            <h3 class="font-cinzel font-bold text-gold text-lg mb-2">iPhone & iOS</h3>
+                            <p class="text-xs text-gray-400 mb-6 leading-relaxed">
+                                Download Signal Messenger from the Apple App Store for secure encrypted dispatch on iPhone and iPad.
+                            </p>
+                        </div>
+                        <a href="https://apps.apple.com/app/signal-private-messenger/id874139669" target="_blank" class="w-full py-3 rounded-xl bg-obsidian-card gold-border text-gold text-xs font-bold font-cinzel tracking-wider uppercase text-center hover:bg-gold/10 transition flex items-center justify-center space-x-2">
+                            <span>Apple App Store</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-auto bg-obsidian-card border-t border-obsidian-border py-12 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="space-y-4 md:col-span-2">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-gold/10 border border-gold/40 flex items-center justify-center text-gold">
+                            <i class="fa-solid fa-gem text-xs"></i>
+                        </div>
+                        <span class="text-lg font-bold font-cinzel tracking-wider gold-gradient-text">ABSOLUTE ABV</span>
+                    </div>
+                    <p class="text-gray-400 text-sm max-w-sm leading-relaxed">
+                        Purveyors of ultra-premium dark luxury spirits and select lifestyle accessories.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-cinzel font-bold text-gold text-sm tracking-wider uppercase mb-4">Navigation</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#home" class="hover:text-gold transition">Hero Elixirs</a></li>
+                        <li><a href="#products" class="hover:text-gold transition">Flagship Spirits</a></li>
+                        <li><a href="#vapes" class="hover:text-gold transition">Cheeky Choof / Vapes</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-cinzel font-bold text-gold text-sm tracking-wider uppercase mb-4">Secure Dispatch</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#signal" class="hover:text-gold transition">Signal Portal</a></li>
+                        <li><span class="text-gray-500">Strictly 18+</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto pt-8 border-t border-obsidian-border flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500">
+                <p>&copy; 2026 Absolute ABV Dark Luxury Spirits. All rights reserved.</p>
+                <p class="mt-4 sm:mt-0">Enjoy Responsibly.</p>
             </div>
         </footer>
 
     </div>
 
-    <!-- JAVASCRIPT & PHYSICS ENGINE -->
+    <!-- JavaScript Application Logic -->
     <script>
-        /* --- Age Verification Logic --- */
-        function verifyAge(isOfAge) {
-            const ageGate = document.getElementById('age-gate');
-            const mainContent = document.getElementById('main-content');
-            
-            if (isOfAge) {
-                ageGate.style.opacity = '0';
+        /* --- Twinkling Cosmic Starfield Canvas --- */
+        const starCanvas = document.getElementById('starfield');
+        const starCtx = starCanvas.getContext('2d');
+        let stars = [];
+
+        function resizeStarfield() {
+            starCanvas.width = window.innerWidth;
+            starCanvas.height = window.innerHeight;
+            initStars();
+        }
+
+        function initStars() {
+            stars = [];
+            const count = Math.floor((window.innerWidth * window.innerHeight) / 2500);
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * starCanvas.width,
+                    y: Math.random() * starCanvas.height,
+                    radius: Math.random() * 1.6,
+                    alpha: Math.random(),
+                    speed: Math.random() * 0.008 + 0.003
+                });
+            }
+        }
+
+        function drawStars() {
+            starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+            starCtx.fillStyle = '#D4AF37';
+            stars.forEach(star => {
+                star.alpha += star.speed;
+                if (star.alpha > 1 || star.alpha < 0.15) star.speed = -star.speed;
+                starCtx.globalAlpha = Math.abs(star.alpha);
+                starCtx.beginPath();
+                starCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                starCtx.fill();
+            });
+            requestAnimationFrame(drawStars);
+        }
+
+        window.addEventListener('resize', resizeStarfield);
+        resizeStarfield();
+        drawStars();
+
+        /* --- Age Gate Logic --- */
+        function verifyAge(allowed) {
+            const gate = document.getElementById('age-gate');
+            const app = document.getElementById('main-app');
+            if (allowed) {
+                gate.classList.add('opacity-0');
                 setTimeout(() => {
-                    ageGate.style.display = 'none';
-                    mainContent.classList.remove('opacity-0', 'pointer-events-none');
-                }, 500);
+                    gate.style.display = 'none';
+                    app.classList.remove('opacity-0', 'pointer-events-none');
+                }, 700);
             } else {
-                alert('You must be of legal drinking age to access this site.');
+                alert('Access restricted to individuals of legal age (18+).');
                 window.location.href = 'https://www.google.com';
             }
         }
 
-        /* --- 3D Tilt Hover Effect on Jars --- */
-        function handleTilt(e, card) {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
-            const rotateX = (-y / (rect.height / 2)) * 10;
-            const rotateY = (x / (rect.width / 2)) * 10;
-            
-            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-        }
+        /* --- Mixology Calculator Logic with Consolidated Spirit Selector --- */
+        let activeSpiritType = 'obsidian'; // 'obsidian' or 'tropical'
+        let obsidianVol = 50;
+        let tropicalVol = 0;
 
-        function resetTilt(card) {
-            card.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-        }
-
-        /* --- Cosmic Space Background Particle Canvas --- */
-        const canvas = document.getElementById('space-canvas');
-        const ctx = canvas.getContext('2d');
-
-        let width, height;
-        let stars = [];
-        let planets = [];
-
-        function initCanvas() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-
-            stars = [];
-            for (let i = 0; i < 150; i++) {
-                stars.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    radius: Math.random() * 1.5,
-                    alpha: Math.random(),
-                    speed: Math.random() * 0.2 + 0.05
-                });
-            }
-
-            planets = [
-                { x: width * 0.15, y: height * 0.3, radius: 45, color: '#2a1a3a', ringColor: 'rgba(212, 175, 55, 0.3)', speed: 0.001 },
-                { x: width * 0.85, y: height * 0.7, radius: 30, color: '#1a2a3a', ringColor: 'rgba(255, 255, 255, 0.2)', speed: -0.0015 }
-            ];
-        }
-
-        window.addEventListener('resize', initCanvas);
-        initCanvas();
-
-        function animateSpace() {
-            ctx.clearRect(0, 0, width, height);
-
-            ctx.fillStyle = '#ffffff';
-            stars.forEach(star => {
-                ctx.globalAlpha = star.alpha;
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                ctx.fill();
-
-                star.y -= star.speed;
-                if (star.y < 0) star.y = height;
-            });
-
-            planets.forEach(p => {
-                ctx.globalAlpha = 0.8;
-                ctx.fillStyle = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.strokeStyle = p.ringColor;
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.ellipse(p.x, p.y, p.radius * 1.8, p.radius * 0.5, Math.PI / 6, 0, Math.PI * 2);
-                ctx.stroke();
-            });
-
-            requestAnimationFrame(animateSpace);
-        }
-        animateSpace();
-
-        /* --- PRECISE ICE & FLUID PHYSICS ENGINE WITH STRICT SEPARATION --- */
-        let currentElixir = 'obsidian';
-        let iceCubes = [];
-        let physicsRunning = false;
-
-        class IceCube {
-            constructor(x, y, targetX, targetY, delay) {
-                this.x = x;
-                this.y = y;
-                this.vx = (Math.random() - 0.5) * 0.6;
-                this.vy = 0;
-                this.angle = Math.random() * 0.4 - 0.2;
-                this.vAngle = (Math.random() - 0.5) * 0.015;
-                this.size = 36; // Strict bounding radius for non-touching repulsion
-                this.targetX = targetX;
-                this.targetY = targetY;
-                this.delay = delay;
-                this.hasSplashed = false;
-                this.settled = false;
-                this.age = 0;
-            }
-
-            update(liquidHeightPx, containerHeight, containerWidth) {
-                this.age++;
-                if (this.age < this.delay) return;
-
-                const gravity = 0.5;
-                const floorY = containerHeight - 32;
-                const leftWall = 36;
-                const rightWall = containerWidth - 36;
-                const waterlineY = containerHeight - liquidHeightPx;
-                const hasLiquid = liquidHeightPx > 10;
-
-                if (!this.settled) {
-                    this.vy += gravity;
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    this.angle += this.vAngle;
-
-                    // Wall boundaries
-                    if (this.x < leftWall) { this.x = leftWall; this.vx *= -0.2; }
-                    if (this.x > rightWall) { this.x = rightWall; this.vx *= -0.2; }
-
-                    // Liquid entry splash trigger
-                    if (hasLiquid && !this.hasSplashed && this.y >= waterlineY) {
-                        this.hasSplashed = true;
-                        triggerCenteredSplash(liquidHeightPx);
-                    }
-
-                    if (hasLiquid && this.y >= waterlineY) {
-                        this.vy *= 0.6;
-                        this.vx *= 0.7;
-                        this.vAngle *= 0.7;
-
-                        const dx = this.targetX - this.x;
-                        const dy = this.targetY - this.y;
-                        this.x += dx * 0.08;
-                        this.y += dy * 0.08;
-
-                        if (Math.abs(this.vy) < 0.15 && Math.abs(dy) < 1.5) {
-                            this.settled = true;
-                            this.vy = 0;
-                            this.vx = 0;
-                        }
-                    } else {
-                        // Empty cup: flat rest on bottom without bouncing
-                        if (this.y >= floorY) {
-                            this.y = floorY;
-                            this.vy = 0;
-                            this.vx = 0;
-                            this.vAngle = 0;
-                            this.angle = 0;
-
-                            const dx = this.targetX - this.x;
-                            this.x += dx * 0.15;
-
-                            if (Math.abs(this.x - this.targetX) < 1.0) {
-                                this.settled = true;
-                            }
-                        }
-                    }
-                } else {
-                    const time = Date.now() * 0.002;
-                    if (hasLiquid) {
-                        // Smooth buoyancy bobbing
-                        this.y = this.targetY + Math.sin(time + this.targetX * 0.1) * 2.2;
-                        this.x += Math.cos(time * 0.5 + this.targetY) * 0.08;
-                    } else {
-                        this.y = floorY;
-                        this.x = this.targetX;
-                    }
-                    this.angle += 0.0004;
-                }
-            }
-        }
-
-        function resolveCollisions() {
-            // Strict repulsive separation preventing cubes from ever touching or clustering
-            for (let i = 0; i < iceCubes.length; i++) {
-                for (let j = i + 1; j < iceCubes.length; j++) {
-                    const c1 = iceCubes[i];
-                    const c2 = iceCubes[j];
-                    if (c1.age < c1.delay || c2.age < c2.delay) continue;
-
-                    const dx = c2.x - c1.x;
-                    const dy = c2.y - c1.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    const minSpacing = c1.size * 1.25; // Generous buffer guaranteeing zero touching
-
-                    if (dist < minSpacing) {
-                        const overlap = (minSpacing - (dist || 0.001)) / 2;
-                        const nx = dist === 0 ? 1 : dx / dist;
-                        const ny = dist === 0 ? 0 : dy / dist;
-
-                        c1.x -= nx * overlap;
-                        c1.y -= ny * overlap;
-                        c2.x += nx * overlap;
-                        c2.y += ny * overlap;
-
-                        c1.vx -= nx * 0.2;
-                        c1.vy -= ny * 0.2;
-                        c2.vx += nx * 0.2;
-                        c2.vy += ny * 0.2;
-
-                        c1.settled = false;
-                        c2.settled = false;
-                    }
-                }
-            }
-        }
-
-        function setElixirType(type) {
-            currentElixir = type;
-            const btnObs = document.getElementById('btn-obsidian');
-            const btnTrop = document.getElementById('btn-tropical');
-            const fill = document.getElementById('liquid-fill');
-
-            if (type === 'obsidian') {
-                btnObs.className = 'py-3 px-4 rounded-xl bg-goldaccent text-black font-bold text-xs uppercase tracking-wider transition cursor-pointer';
-                btnTrop.className = 'py-3 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold text-xs uppercase tracking-wider transition cursor-pointer hover:border-goldaccent';
-                fill.className = 'absolute bottom-0 left-0 right-0 transition-all duration-200 bg-gradient-to-t from-black via-purple-950 to-neutral-900 opacity-90 pointer-events-none';
+        function toggleSpirit() {
+            if (activeSpiritType === 'obsidian') {
+                activeSpiritType = 'tropical';
+                document.getElementById('active-spirit-name').textContent = 'Tropical Apex (35% ABV)';
+                document.getElementById('toggle-btn-text').textContent = 'Switch to Obsidian Night';
+                document.getElementById('slider-label-text').textContent = 'Tropical Apex Volume';
+                document.getElementById('slider-active-spirit').value = tropicalVol;
             } else {
-                btnTrop.className = 'py-3 px-4 rounded-xl bg-goldaccent text-black font-bold text-xs uppercase tracking-wider transition cursor-pointer';
-                btnObs.className = 'py-3 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-neutral-300 font-bold text-xs uppercase tracking-wider transition cursor-pointer hover:border-goldaccent';
-                fill.className = 'absolute bottom-0 left-0 right-0 transition-all duration-200 bg-gradient-to-t from-amber-950 via-amber-900 to-yellow-950 opacity-90 pointer-events-none';
+                activeSpiritType = 'obsidian';
+                document.getElementById('active-spirit-name').textContent = 'Obsidian Night (50% ABV)';
+                document.getElementById('toggle-btn-text').textContent = 'Switch to Tropical Apex';
+                document.getElementById('slider-label-text').textContent = 'Obsidian Night Volume';
+                document.getElementById('slider-active-spirit').value = obsidianVol;
             }
             updateMixology();
         }
 
-        function triggerCenteredSplash(liquidHeightPx) {
-            const splashContainer = document.getElementById('splash-container');
-            
-            // Centered expanding ripple ring
-            const ripple = document.createElement('div');
-            ripple.style.cssText = `
-                position: absolute;
-                bottom: ${liquidHeightPx}px;
-                left: 50%;
-                transform: translateX(-50%) scale(0.2);
-                width: 28px;
-                height: 9px;
-                border: 2px solid rgba(255, 255, 255, 0.9);
-                border-radius: 50%;
-                animation: expandRipple 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-                pointer-events: none;
-            `;
-            splashContainer.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 700);
-
-            // Centered radial droplets
-            for (let i = 0; i < 6; i++) {
-                const drop = document.createElement('div');
-                const angle = Math.PI + (Math.random() - 0.5) * 1.8;
-                const tx = Math.cos(angle) * (22 + Math.random() * 28);
-                const ty = -Math.sin(angle) * (32 + Math.random() * 38);
-
-                drop.style.cssText = `
-                    position: absolute;
-                    bottom: ${liquidHeightPx}px;
-                    left: 50%;
-                    width: 4px;
-                    height: 4px;
-                    background: rgba(255, 255, 255, 0.95);
-                    border-radius: 50%;
-                    box-shadow: 0 0 6px rgba(255,255,255,0.9);
-                    animation: splashParticle 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-                    --tx: ${tx}px;
-                    --ty: ${ty}px;
-                    pointer-events: none;
-                `;
-                splashContainer.appendChild(drop);
-                setTimeout(() => drop.remove(), 500);
-            }
-        }
-
-        // Keyframe injections for splash animations
-        const styleSheet = document.createElement('style');
-        styleSheet.innerHTML = `
-            @keyframes expandRipple {
-                0% { transform: translateX(-50%) scale(0.2); opacity: 1; }
-                100% { transform: translateX(-50%) scale(4.5); opacity: 0; }
-            }
-            @keyframes splashParticle {
-                0% { transform: translate(0, 0) scale(1); opacity: 1; }
-                100% { transform: translate(var(--tx), var(--ty)) scale(0.2); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(styleSheet);
-
-        // Distinct, randomized coordinate zones ensuring cubes never touch or cluster
-        const spatialZones = [
-            { x: 44, y: 18 },
-            { x: 116, y: 22 },
-            { x: 80, y: 52 },
-            { x: 40, y: 82 },
-            { x: 120, y: 92 },
-            { x: 80, y: 116 }
-        ];
-
         function updateMixology() {
-            const spiritVol = parseFloat(document.getElementById('spirit-slider').value);
-            const tonicVol = parseFloat(document.getElementById('tonic-slider').value);
-            const mixerVol = parseFloat(document.getElementById('mixer-slider').value);
-            const iceCount = parseInt(document.getElementById('ice-slider').value);
-
-            document.getElementById('spirit-vol-label').innerText = spiritVol + ' ML';
-            document.getElementById('tonic-vol-label').innerText = tonicVol + ' ML';
-            document.getElementById('mixer-vol-label').innerText = mixerVol + ' ML';
-            document.getElementById('ice-label').innerText = iceCount + ' Cubes';
-
-            const totalLiquid = spiritVol + tonicVol + mixerVol;
-            document.getElementById('total-vol-output').innerText = totalLiquid + ' ML';
-
-            const containerHeight = 256;
-            const containerWidth = 160;
-
-            const liquidHeightPx = Math.min((totalLiquid / 650) * containerHeight, containerHeight - 30);
-            document.getElementById('liquid-fill').style.height = liquidHeightPx + 'px';
-
-            // Rebuild ice cubes with staggered drop delay
-            iceCubes = [];
-            for (let i = 0; i < iceCount; i++) {
-                const zone = spatialZones[i % spatialZones.length];
-                const startX = containerWidth / 2 + (Math.random() - 0.5) * 10;
-                const startY = -45 - (i * 40);
-                
-                let targetY;
-                if (liquidHeightPx > 10) {
-                    targetY = containerHeight - liquidHeightPx - 18 - zone.y;
-                } else {
-                    targetY = containerHeight - 32 - (i * 24);
-                }
-                
-                const delay = i * 16; // staggered drop timing
-                const cube = new IceCube(startX, startY, zone.x, Math.max(targetY, 38), delay);
-                iceCubes.push(cube);
+            const currentSliderVal = parseFloat(document.getElementById('slider-active-spirit').value);
+            if (activeSpiritType === 'obsidian') {
+                obsidianVol = currentSliderVal;
+            } else {
+                tropicalVol = currentSliderVal;
             }
 
-            const baseABV = currentElixir === 'obsidian' ? 40.0 : 30.0;
-            let finalABV = totalLiquid > 0 ? (spiritVol * baseABV) / totalLiquid : 0;
-            document.getElementById('potency-output').innerText = finalABV.toFixed(1) + '% ABV';
+            document.getElementById('val-active-spirit').textContent = currentSliderVal + ' ml';
 
-            if (!physicsRunning) {
-                startPhysicsLoop(containerHeight, containerWidth, liquidHeightPx);
-            }
-        }
+            const tonicVol = parseFloat(document.getElementById('slider-tonic').value);
+            const sodaVol = parseFloat(document.getElementById('slider-soda').value);
 
-        function startPhysicsLoop(containerHeight, containerWidth, liquidHeightPx) {
-            physicsRunning = true;
-            const iceContainer = document.getElementById('physics-ice-container');
+            document.getElementById('val-tonic').textContent = tonicVol + ' ml';
+            document.getElementById('val-soda').textContent = sodaVol + ' ml';
 
-            function loop() {
-                iceContainer.innerHTML = '';
-                let allSettled = true;
-
-                iceCubes.forEach(cube => {
-                    cube.update(liquidHeightPx, containerHeight, containerWidth);
-                    if (!cube.settled) allSettled = false;
-                });
-
-                resolveCollisions();
-
-                iceCubes.forEach(cube => {
-                    const el = document.createElement('div');
-                    el.style.cssText = `
-                        position: absolute;
-                        left: ${cube.x}px;
-                        top: ${cube.y}px;
-                        width: 28px;
-                        height: 28px;
-                        background: rgba(255, 255, 255, 0.24);
-                        border: 1px solid rgba(255, 255, 255, 0.7);
-                        border-radius: 6px;
-                        backdrop-filter: blur(4px);
-                        box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-                        transform: translate(-50%, -50%) rotate(${cube.angle}rad);
-                        pointer-events: none;
-                    `;
-                    iceContainer.appendChild(el);
-                });
-
-                if (!allSettled || iceCubes.some(c => c.vx !== 0 || c.vy !== 0)) {
-                    requestAnimationFrame(loop);
-                } else {
-                    physicsRunning = false;
-                }
-            }
-            loop();
-        }
-
-        updateMixology();
-
-        /* --- Signal Order Modal Logic --- */
-        function openOrderModal(name, price, abv) {
-            document.getElementById('modal-product-name').innerText = name;
-            document.getElementById('modal-product-price').innerText = price;
-            document.getElementById('modal-product-abv').innerText = abv;
+            const totalVol = obsidianVol + tropicalVol + tonicVol + sodaVol;
+            const totalAlcoholMl = (obsidianVol * 0.50) + (tropicalVol * 0.35);
+            const resultingAbv = totalVol > 0 ? (totalAlcoholMl / totalVol) * 100 : 0;
             
-            const modal = document.getElementById('order-modal');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
+            // Standard Drinks formula: Pure alcohol in grams / 10g
+            const pureAlcoholGrams = totalAlcoholMl * 0.789;
+            const standardDrinks = pureAlcoholGrams / 10;
+
+            document.getElementById('res-volume').textContent = totalVol + ' ml';
+            document.getElementById('res-abv').textContent = resultingAbv.toFixed(1) + '%';
+            document.getElementById('res-std').textContent = standardDrinks.toFixed(1);
         }
 
-        function closeOrderModal() {
-            const modal = document.getElementById('order-modal');
-            modal.classList.add('opacity-0', 'pointer-events-none');
+        function resetMixer() {
+            activeSpiritType = 'obsidian';
+            obsidianVol = 50;
+            tropicalVol = 0;
+            document.getElementById('active-spirit-name').textContent = 'Obsidian Night (50% ABV)';
+            document.getElementById('toggle-btn-text').textContent = 'Switch to Tropical Apex';
+            document.getElementById('slider-label-text').textContent = 'Obsidian Night Volume';
+            document.getElementById('slider-active-spirit').value = 50;
+            document.getElementById('slider-tonic').value = 150;
+            document.getElementById('slider-soda').value = 100;
+            updateMixology();
         }
+
+        // Initialize calculator on load
+        updateMixology();
     </script>
 </body>
 </html>
